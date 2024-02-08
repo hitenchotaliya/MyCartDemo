@@ -1,4 +1,54 @@
+function status_confirm(tableName) {
+    // Collect all the selected checkboxes
+    var selectedIds = [];
+    $('.checkbox:checked').each(function () {
+        selectedIds.push($(this).val());
+    });
 
+    // Check if any checkboxes are selected
+    if (selectedIds.length > 0) {
+        // Append the selected IDs and table name to the form data
+        $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
+        $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
+
+        // Ask for confirmation
+        var result = confirm("Are you sure to change status of selected items?");
+        if (result) {
+            return true; // Proceed with the action
+        } else {
+            return false; // Cancel the action
+        }
+    } else {
+        // No checkboxes selected, show an alert
+        alert('Select at least 1 record to change status.');
+        return false; // Cancel the action
+    }
+}
+
+function delete_confirm(tableName) {
+    // Collect all the selected checkboxes
+    var selectedIds = [];
+    $('.checkbox:checked').each(function () {
+        selectedIds.push($(this).val());
+    });
+
+    if (selectedIds.length > 0) {
+        // Append the selected IDs and table name to the form data
+        $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
+        $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
+
+        // Ask for confirmation
+        var result = confirm("Are you sure you want to delete the selected item(s)?");
+        if (result) {
+            return true; // Proceed with the action
+        } else {
+            return false; // Cancel the action
+        }
+    } else {
+        alert('Select at least 1 record to delete.');
+        return false;
+    }
+}
 
 //JQuery
 $(document).ready(function () {

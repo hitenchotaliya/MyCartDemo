@@ -202,7 +202,7 @@ class Database
                 $sql .= " IN ($in)";
             }
 
-            echo $sql;
+            // echo $sql;
             if ($this->mysqli->query($sql)) {
                 array_push($this->result, $this->mysqli->query($sql));
                 return true;

@@ -161,23 +161,17 @@
             </div>
 
             <div class="status">
-                <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm();">
-
+                <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('categories');">
                     <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete" />
-
                 </form>
 
-
-                <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm();">
-
+                <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('categories');">
                     <label>Status: </label>
                     <select id="action" name="action">
                         <option value="activate">Activate</option>
                         <option value="deactivate">Deactivate</option>
                     </select>
-
                     <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" />
-
                 </form>
             </div>
 
@@ -236,22 +230,18 @@
         </div>
 
         <script>
-            function status_confirm() {
+            function status_confirm(tableName) {
                 // Collect all the selected checkboxes
                 var selectedIds = [];
                 $('.checkbox:checked').each(function() {
                     selectedIds.push($(this).val());
                 });
 
-                //  console.log("Selected IDs:", selectedIds);
-
                 // Check if any checkboxes are selected
                 if (selectedIds.length > 0) {
-                    // Show the selected IDs in an alert message
-                    //  alert("Selected IDs: " + selectedIds.join(', '));
-
-                    // Append the selected IDs to the form data
+                    // Append the selected IDs and table name to the form data
                     $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
+                    $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
 
                     // Ask for confirmation
                     var result = confirm("Are you sure to change status of selected items?");
@@ -267,7 +257,7 @@
                 }
             }
 
-            function delete_confirm() {
+            function delete_confirm(tableName) {
                 // Collect all the selected checkboxes
                 var selectedIds = [];
                 $('.checkbox:checked').each(function() {
@@ -275,11 +265,9 @@
                 });
 
                 if (selectedIds.length > 0) {
-                    // Show the selected IDs in an alert message
-                    //  alert("Selected IDs: " + selectedIds.join(', '));
-
-                    // Append the selected IDs to the form data
+                    // Append the selected IDs and table name to the form data
                     $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
+                    $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
 
                     // Ask for confirmation
                     var result = confirm("Are you sure you want to delete the selected item(s)?");

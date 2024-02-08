@@ -6,13 +6,14 @@ if (isset($_POST['bulk_edit_submit'])) {
 
 
     // If id array is not empty 
-    if (!empty($_POST['checked_id'])) {
+    if (!empty($_POST['checked_id']) && !empty($_POST['table_name'])) {
 
         //Store id in variable
         $idStr = $_POST['checked_id'];
 
         //Get the action
         $isActive = $_POST['action'];
+
 
         //Change it to requirement
         if ($isActive === 'activate') {
@@ -23,19 +24,36 @@ if (isset($_POST['bulk_edit_submit'])) {
             $isActive = 0;
         }
 
-        //Pass data to function
-        $update = $obj->update(
-            "categories",
-            [
-                "is_active" => $isActive,
-            ],
-            "category_id",
-            $idStr
-        );
-
-        if ($update) {
-            header("location: " . $cat . "?updated=updated");
+        $tablename = $_POST['table_name'];
+        if ($tablename == "categories") {
+            $update = $obj->update(
+                $tablename,
+                [
+                    "is_active" => $isActive,
+                ],
+                "category_id",
+                $idStr
+            );
+            if ($update) {
+                header("location: " . $cat . "?updated=updated");
+            }
         }
+        if ($tablename == "products") {
+            $update = $obj->update(
+                $tablename,
+                [
+                    "is_active" => $isActive,
+                ],
+                "product_id",
+                $idStr
+            );
+            if ($update) {
+                header("location: " . $product . "?updated=updated");
+            }
+        }
+        //Pass data to function
+
+
         // // echo '<pre>';
         // // print_r($_POST);
         // // echo '</pre>';
