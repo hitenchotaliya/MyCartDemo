@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Displaying Hierarchy</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <style>
+        .child {
+            display: none;
+            padding-left: 20px;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            var dataObject = {
+                clothes: ['men', 'women', 'children'],
+                electronic: ['laptop', 'mobile'],
+                laptop: ['i5', 'i7'],
+                men: ['topwear', 'bottomwear'],
+                topwear: ['tshirt', 'shirt'],
+                women: ['chaniyacholi', 'lahenga']
+                // ... other keys and values
+            };
+
+            // Function to build hierarchy
+            function buildHierarchy(key, value, parent) {
+                var hierarchy = '<ul>';
+
+                for (var i = 0; i < value.length; i++) {
+                    var currentKey = value[i];
+                    hierarchy += '<li class="parent">' + currentKey;
+
+                    if (dataObject[currentKey]) {
+                        hierarchy += buildHierarchy(currentKey, dataObject[currentKey], key);
+                    }
+
+                    hierarchy += '</li>';
+                }
+
+                hierarchy += '</ul>';
+                return hierarchy;
+            }
+
+            // Display hierarchy
+            $('#result').html(buildHierarchy('', Object.keys(dataObject), ''));
+
+            // Add click event to toggle visibility
+            $('.parent').on('click', function () {
+                $(this).children('ul').toggle();
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <div id="result"></div>
+</body>
+
+</html>

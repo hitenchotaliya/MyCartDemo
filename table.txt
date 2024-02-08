@@ -1,0 +1,48 @@
+
+CREATE TABLE categories (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    parent_category_id INT,
+    title VARCHAR(255),
+    is_active BOOLEAN DEFAULT 1,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (parent_category_id) REFERENCES categories(category_id)
+); 
+
+
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255),
+    description TEXT,
+    category_id INT,
+    is_active BOOLEAN DEFAULT 1,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES categories(category_id),
+);
+
+CREATE TABLE product_images (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    image_path VARCHAR(255),
+    is_primary TINYINT(1) DEFAULT 0,
+    date_added TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    date_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+WITH RECURSIVE CategoryHierarchy AS (
+  -- Anchor member: Select the initial category (Jeans)
+  SELECT c.category_id, c.title, c.parent_category_id
+  FROM categories c
+  WHERE c.title = 'Jeans'
+  
+  UNION ALL
+  
+  -- Recursive member: Join the current category with its parent category
+  SELECT c.category_id, c.title, c.parent_category_id
+  FROM categories c
+  JOIN CategoryHierarchy ch ON c.category_id = ch.parent_category_id
+)
+-- Select all categories in the hierarchy
+SELECT * FROM CategoryHierarchy;
