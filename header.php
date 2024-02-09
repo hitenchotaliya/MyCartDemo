@@ -31,6 +31,7 @@ if (!isset($_SESSION['admin_name'])) {
             <li><a href="categories.php">Category</a></li>
             <li><a href="insert.php">Add Category</a></li>
             <li><a href="product.php">Product</a></li>
+            <li><a href="insertProduct.php">Add Product</a></li>
             <li><a href="">About us</a></li>
         </ul>
     </div>

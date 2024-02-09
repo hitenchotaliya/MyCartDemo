@@ -1,5 +1,6 @@
 <?php
 
+include './header.php';
 include './php-files/config.php';
 
 $obj = new Database();
@@ -35,6 +36,18 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
     );
 
     $result = $obj->getResult();
+    $search = $obj->escapeString($_GET['search']);
+    $obj->search(
+        "products",
+        "products.product_id, products.title, products.description, products.is_active, products.category_id, c.title AS category_title",
+        "categories AS c ON products.category_id = c.category_id",
+        "CONCAT(products.title, ' ', products.description, ' ', c.title) LIKE '%$search%'",
+        null,
+        null,
+        null
+    );
+
+    $result = $obj->getResult();
 } else if (isset($orderby)) {
     $obj->select(
         "products",
@@ -58,8 +71,8 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
 } else {
     $obj->select(
         "products",
-        "products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path,product_images.is_primary",
-        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id",
+        "DISTINCT products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path, product_images.is_primary",
+        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id AND product_images.is_primary = 1", // Consider only primary images
         "categories.category_id = products.category_id",
         null,
         $setLimit,
@@ -72,20 +85,26 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
 
 function ShowProduct($result)
 {
+
+
     if (empty($result)) {
         return '<tr><td colspan="11">No records found</td></tr>';
     }
 
+
     $html = '';
     $rowNumber = 1;
 
+    if (isset($_GET['page']) && $_GET['page'] > 1) {
+        $rowNumber = ($_GET['page'] - 1) * 5 + 1;
+    }
     foreach ($result as $row) {
         $productId = $row['product_id'];
         $isActive = ($row['is_active'] == 1) ? 'Active' : 'Inactive';
         $imagePath = ''; // Initialize image path variable
 
-        // Check if the row has an image with is_primary = 1
-        if (!empty($row['image_path']) && $row['is_primary'] == 1) {
+        // Check if the row has a primary image
+        if (!empty($row['image_path'])) {
             $imagePath = $row['image_path']; // Assign image path
         }
 
@@ -100,7 +119,7 @@ function ShowProduct($result)
         $html .= '<td>';
         // Display the primary image for the product
         if (!empty($imagePath)) {
-            $html .= '<img src="' . $imagePath . '" alt="Product Image" style="max-width: 100px;">';
+            $html .= '<img src="' . $imagePath . '" alt="Product Image" style="max-width: 50px;">';
         }
         $html .= '</td>';
         $html .= '<td>';
@@ -112,7 +131,7 @@ function ShowProduct($result)
         $html .= '<td>';
         $html .= '<form method="POST" action="php-files/delete.php">';
         $html .= '<input type="hidden" name="product_id" value="' . $productId . '">';
-        $html .= '<input type="submit" value="Delete">';
+        $html .= '<input class="delete_confirm" type="submit" value="Delete">';
         $html .= '</form>';
         $html .= '</td>';
         $html .= '<td>';
@@ -138,22 +157,24 @@ function ShowProduct($result)
     <title>Product</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
     <script src="./js/js.js"></script>
+
 </head>
 
 <body>
-    <h1>Product</h1>
-    <a href="insertProduct.php">Add</a><br>
-    <div class="col-md-7">
-        <form action="product.php" method="GET">
-            <div class="input-group search">
-                <input type="text" name="search" placeholder="Search for...">
-                <span>
-                    <input type="submit" value="Search" />
-                </span>
-            </div>
-        </form>
-    </div><br>
     <div class="main">
+        <h1>Product</h1>
+
+
+        <div class="col-md-7">
+            <form action="product.php" method="GET">
+                <div class="input-group search">
+                    <input type="text" name="search" placeholder="Search for...">
+                    <span>
+                        <input type="submit" value="Search" />
+                    </span>
+                </div>
+            </form>
+        </div>
         <table border="1">
             <thead>
                 <tr>
@@ -174,63 +195,64 @@ function ShowProduct($result)
                 <?php echo ShowProduct($result); ?>
             </tbody>
         </table>
-    </div><br><br>
-    <div class="status">
-        <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('products');">
-            <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete" />
-        </form>
 
-        <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('products');">
-            <label>Status: </label>
-            <select id="action" name="action">
-                <option value="activate">Activate</option>
-                <option value="deactivate">Deactivate</option>
-            </select>
-            <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" />
-        </form>
-    </div>
-    <div class="sort">
-        <form action="" method="GET">
-            <label for="sort">Sort:</label>
-            <select name="sort" id="sort">
-                <option value="">Select Option</option>
-                <option value="a-z" <?php if (isset($_GET['sort']) && $_GET['sort'] == "a-z") {
-                                        echo "selected";
-                                    } ?>>A-Z</option>
-                <!-- SELECT * FROM categories ORDER BY title ASC; -->
-                <option value="z-a" <?php if (isset($_GET['sort']) && $_GET['sort'] == "z-a") {
-                                        echo "selected";
-                                    } ?>>Z-A</option>
-                <!-- SELECT * FROM categories ORDER BY title DESC; -->
-            </select>
-            <input type="submit" value="Submit">
-        </form>
+        <div class="status">
+            <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('products');">
+                <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete" />
+            </form>
 
-        <form action="" method="GET">
-            <label for="sort">Sort by category:</label>
-            <select name="categoryID" id="sort">
-                <?php
-                $obj->select("categories");
-                $r = $obj->getResult();
-                foreach ($r as $category) {
-                    $categoryId = $category["category_id"];
-                    $categoryName = $category["title"];
-                    echo "<option value='$categoryId'>$categoryName</option>";
-                }
-                ?>
-            </select>
-            <input type="submit" value="Submit">
-        </form>
+            <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('products');">
+                <label>Status: </label>
+                <select id="action" name="action">
+                    <option value="activate">Activate</option>
+                    <option value="deactivate">Deactivate</option>
+                </select>
+                <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" />
+            </form>
+        </div>
+        <div class="sort">
+            <form action="" method="GET">
+                <label for="sort">Sort:</label>
+                <select name="sort" id="sort">
+                    <option value="">Select Option</option>
+                    <option value="a-z" <?php if (isset($_GET['sort']) && $_GET['sort'] == "a-z") {
+                                            echo "selected";
+                                        } ?>>A-Z</option>
+                    <!-- SELECT * FROM categories ORDER BY title ASC; -->
+                    <option value="z-a" <?php if (isset($_GET['sort']) && $_GET['sort'] == "z-a") {
+                                            echo "selected";
+                                        } ?>>Z-A</option>
+                    <!-- SELECT * FROM categories ORDER BY title DESC; -->
+                </select>
+                <input type="submit" value="Submit">
+            </form>
+
+            <form action="" method="GET">
+                <label for="sort">Sort by category:</label>
+                <select name="categoryID" id="sort">
+                    <?php
+                    $obj->select("categories");
+                    $r = $obj->getResult();
+                    foreach ($r as $category) {
+                        $categoryId = $category["category_id"];
+                        $categoryName = $category["title"];
+                        echo "<option value='$categoryId'>$categoryName</option>";
+                    }
+                    ?>
+                </select>
+                <input type="submit" value="Submit">
+            </form>
 
 
-        <button onclick="window.location.href='<?php echo $product; ?>'">Clear</button>
+            <button onclick="window.location.href='<?php echo $product; ?>'">Clear</button>
 
-    </div>
+        </div>
 
-    <div class="pagination">
-        <?php
-        echo $obj->Pagination("products", null, null, $setLimit);
-        ?>
+        <div class="pagination">
+            <?php
+            echo $obj->Pagination("products", null, null, $setLimit);
+            ?>
+        </div>
     </div>
 
     <script>

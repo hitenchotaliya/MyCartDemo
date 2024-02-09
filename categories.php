@@ -87,7 +87,7 @@
             $html .= '<td>';
             $html .= '<form method="POST" action="./php-files/delete.php">';
             $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            $html .= '<input type="submit" value="Remove">';
+            $html .= '<input  class="delete_confirm" type="submit" value="Remove">';
             $html .= '</form>';
             $html .= '</td>';
             $html .= '<td>';

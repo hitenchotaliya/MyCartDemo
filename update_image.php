@@ -31,7 +31,14 @@ if (isset($_POST['submit'])) {
                 }
             }
         } else {
-            $uploadErrors[] = "No files uploaded or invalid file format.";
+            $obj->update(
+                "product_images",
+                ["is_primary" => $primary],
+                "image_id = $ImageID"
+            );
+            $absolutePath = "http://localhost/MyCart/ImageManage.php?id=$pid";
+            // echo $absolutePath;
+            header("Location: $absolutePath");
         }
     }
 }

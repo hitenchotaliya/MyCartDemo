@@ -150,6 +150,21 @@ $(document).ready(function () {
             $('#select_all').prop('checked', false);
         }
     });
+
+    console.log("Document ready, delete confirmation script running...");
+
+    $('.deleted_confirm').on('click', function (e) {
+        // Prevent the default form submission
+        e.preventDefault();
+
+        // Confirm deletion
+        var confirmation = confirm("Are you sure you want to delete this record?");
+
+        // If user confirms deletion, submit the form
+        if (confirmation) {
+            $(this).closest('form').submit();
+        }
+    });
     // var searchRequest;
 
     // var searchTimeout;

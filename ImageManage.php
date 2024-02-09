@@ -24,6 +24,8 @@ $images = $obj->getResult();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <script src="./js/js.js"></script>
 </head>
 
 <body>
@@ -40,7 +42,7 @@ $images = $obj->getResult();
             echo "<form action='php-files/delete.php' method='post'>";
             echo "<input type='hidden' name='image_id' value='$imageId'>";
             echo "<input type='hidden' name='product_id' value='$pid'>";
-            echo "<button type='submit' name='delete'>Delete</button>";
+            echo "<button class='delete_confirm' type='submit' name='delete'>Delete</button>";
             echo "</form>";
 
             // Display update button for each image
