@@ -327,6 +327,63 @@ class Database
         return $uploadedFiles;
     }
 
+    public function search($table, $rows = "*", $join = null, $where = null, $order = null, $limit = null, $search = null, $searchColumn = null)
+    {
+        // Before selection, check if the table exists in the database
+        if ($this->TableExist($table)) {
+            $sql = "SELECT $rows FROM $table";
+
+            if ($join != null) {
+                $sql .= " LEFT JOIN $join"; // Use LEFT JOIN here
+            }
+
+            if ($where != null) {
+                $sql .= " WHERE $where";
+            }
+
+            if ($search != null && $searchColumn != null) {
+                // Assuming $search is sanitized to prevent SQL injection
+                $sql .= " WHERE $searchColumn LIKE '%$search%'"; // Use WHERE here
+            }
+
+            if ($order != null) {
+                $sql .= " ORDER BY $order";
+            }
+
+            if ($limit != null) {
+                if (isset($_GET['page'])) {
+                    $page = $_GET['page'];
+                } else {
+                    $page = 1;
+                }
+                $start = ($page - 1) * $limit;
+                $sql .= " LIMIT $start, $limit";
+            }
+            //   echo $sql;
+            $this->myQuery = $sql; // Pass back to SQL
+
+            // Run the query
+            $query = $this->mysqli->query($sql);
+
+            if ($query) {
+                $this->result = $query->fetch_all(MYSQLI_ASSOC);
+                return true; // Query was successful
+            } else {
+                array_push($this->result, $this->mysqli->error);
+                return false; // No rows were returned
+            }
+        } else {
+            return false;
+            array_push($this->result, $this->mysqli->error);
+            // Table does not exist
+        }
+    }
+
+
+
+
+
+
 
     // public function uploadFiles($filesArray, $destinationFolder)
     // {

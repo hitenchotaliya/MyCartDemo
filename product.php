@@ -7,63 +7,99 @@ $obj = new Database();
 $setLimit = 5;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
 
+if (isset($_GET['sort'])) {
+    if ($_GET['sort'] === 'a-z') {
+        $orderby = " title ASC";
+    } else if ($_GET['sort'] === 'z-a') {
+        $orderby = " title DESC";
+    }
+}
+if (isset($_GET['categoryID'])) {
+    $SortID = $_GET['categoryID'];
+}
+
+
+
 // $offset = ($page - 1) * $setLimit;
+if (isset($_GET['search']) && $_GET['search'] !== '') {
+    $search = $obj->escapeString($_GET['search']);
+    $obj->search(
+        "products",
+        "products.product_id, products.title, products.description, products.is_active, products.category_id, c.title AS category_title",
+        "categories AS c ON products.category_id = c.category_id",
+        null,
+        null,
+        null,
+        $search,
+        "c.title"
+    );
 
-$obj->select(
-    "products",
-    "products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path",
-    "categories LEFT JOIN product_images ON products.product_id = product_images.product_id",
-    "categories.category_id = products.category_id",
-    null,
-    $setLimit,
-);
+    $result = $obj->getResult();
+} else if (isset($orderby)) {
+    $obj->select(
+        "products",
+        "products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path,product_images.is_primary",
+        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id",
+        "categories.category_id = products.category_id",
+        $orderby,
+        $setLimit,
+    );
+    $result = $obj->getResult();
+} else if (isset($SortID)) {
+    $obj->select(
+        "products",
+        "products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path, product_images.is_primary",
+        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id",
+        "categories.category_id = $SortID AND categories.category_id = products.category_id",
+        null,
+        $setLimit
+    );
+    $result = $obj->getResult();
+} else {
+    $obj->select(
+        "products",
+        "products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path,product_images.is_primary",
+        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id",
+        "categories.category_id = products.category_id",
+        null,
+        $setLimit,
+    );
+    $result = $obj->getResult();
+}
 
-$result = $obj->getResult();
+
 
 
 function ShowProduct($result)
 {
     if (empty($result)) {
-        return '<tr><td colspan="5">No records found</td></tr>';
+        return '<tr><td colspan="11">No records found</td></tr>';
     }
 
     $html = '';
     $rowNumber = 1;
 
-    // Create an associative array to group products by their IDs
-    $groupedProducts = [];
-    foreach ($result as $r) {
-        $productId = $r['product_id'];
-        if (!isset($groupedProducts[$productId])) {
-            $groupedProducts[$productId] = [
-                'product_id' => $productId,
-                'title' => $r['title'],
-                'category_title' => $r['category_title'],
-                'description' => $r['description'],
-                'is_active' => $r['is_active'],
-                'image_paths' => [] // Initialize an array to store image paths for the product
-            ];
+    foreach ($result as $row) {
+        $productId = $row['product_id'];
+        $isActive = ($row['is_active'] == 1) ? 'Active' : 'Inactive';
+        $imagePath = ''; // Initialize image path variable
+
+        // Check if the row has an image with is_primary = 1
+        if (!empty($row['image_path']) && $row['is_primary'] == 1) {
+            $imagePath = $row['image_path']; // Assign image path
         }
-        // Add image path to the array for the current product
-        $groupedProducts[$productId]['image_paths'][] = $r['image_path'];
-    }
-
-    // Iterate over the grouped products to generate HTML
-    foreach ($groupedProducts as $productId => $product) {
-
-        $isActive = ($product['is_active'] == 1) ? 'Active' : 'Inactive';
 
         $html .= '<tr>';
         $html .= '<td><input type="checkbox" name="checked_id[]" class="checkbox" value="' . $productId . '" /></td>';
         $html .= '<td>' . $rowNumber++ . '</td>';
         $html .= '<td>' . $productId . '</td>';
-        $html .= '<td>' . $product['title'] . '</td>';
-        $html .= '<td>' . $product['category_title'] . '</td>';
-        $html .= '<td>' . $product['description'] . '</td>';
+        $html .= '<td>' . $row['title'] . '</td>';
+        $html .= '<td>' . $row['category_title'] . '</td>';
+        $html .= '<td>' . $row['description'] . '</td>';
         $html .= '<td>' . $isActive . '</td>';
         $html .= '<td>';
-        // Display images for the current product
-        foreach ($product['image_paths'] as $imagePath) {
+        // Display the primary image for the product
+        if (!empty($imagePath)) {
             $html .= '<img src="' . $imagePath . '" alt="Product Image" style="max-width: 100px;">';
         }
         $html .= '</td>';
@@ -90,6 +126,7 @@ function ShowProduct($result)
 
     return $html;
 }
+
 
 ?>
 <!DOCTYPE html>
@@ -124,9 +161,9 @@ function ShowProduct($result)
                     <th>Index</th>
                     <th>Product ID</th>
                     <th>Title</th>
+                    <th>Category title</th>
                     <th>Product Description</th>
                     <th>Status</th>
-                    <th>Category title</th>
                     <th>Image</th>
                     <th>Update</th>
                     <th>Delete</th>
@@ -151,6 +188,43 @@ function ShowProduct($result)
             </select>
             <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" />
         </form>
+    </div>
+    <div class="sort">
+        <form action="" method="GET">
+            <label for="sort">Sort:</label>
+            <select name="sort" id="sort">
+                <option value="">Select Option</option>
+                <option value="a-z" <?php if (isset($_GET['sort']) && $_GET['sort'] == "a-z") {
+                                        echo "selected";
+                                    } ?>>A-Z</option>
+                <!-- SELECT * FROM categories ORDER BY title ASC; -->
+                <option value="z-a" <?php if (isset($_GET['sort']) && $_GET['sort'] == "z-a") {
+                                        echo "selected";
+                                    } ?>>Z-A</option>
+                <!-- SELECT * FROM categories ORDER BY title DESC; -->
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+
+        <form action="" method="GET">
+            <label for="sort">Sort by category:</label>
+            <select name="categoryID" id="sort">
+                <?php
+                $obj->select("categories");
+                $r = $obj->getResult();
+                foreach ($r as $category) {
+                    $categoryId = $category["category_id"];
+                    $categoryName = $category["title"];
+                    echo "<option value='$categoryId'>$categoryName</option>";
+                }
+                ?>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+
+
+        <button onclick="window.location.href='<?php echo $product; ?>'">Clear</button>
+
     </div>
 
     <div class="pagination">

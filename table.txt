@@ -46,3 +46,25 @@ WITH RECURSIVE CategoryHierarchy AS (
 )
 -- Select all categories in the hierarchy
 SELECT * FROM CategoryHierarchy;
+
+
+    // Create an associative array to group products by their IDs
+    $groupedProducts = [];
+    foreach ($result as $r) {
+        $productId = $r['product_id'];
+        if (!isset($groupedProducts[$productId])) {
+            $groupedProducts[$productId] = [
+                'product_id' => $productId,
+                'title' => $r['title'],
+                'category_title' => $r['category_title'],
+                'description' => $r['description'],
+                'is_active' => $r['is_active'],
+                'image_paths' => [] // Initialize an array to store image paths for the product
+            ];
+        }
+        // Add image path to the array for the current product
+        $groupedProducts[$productId]['image_paths'][] = $r['image_path'];
+    }
+
+    // Iterate over the grouped products to generate HTML
+    foreach ($groupedProducts as $productId => $product) 

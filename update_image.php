@@ -10,13 +10,15 @@ $uploadErrors = array();
 if (isset($_POST['submit'])) {
     if (isset($_FILES['imageurl']) && !empty($_FILES['imageurl']['name'])) {
 
+
+        $primary = $_POST['is_primary'];
         $uploadedFiles = $obj->uploadFiles($_FILES['imageurl'], 'upload');
 
         if (is_array($uploadedFiles) && !empty($uploadedFiles)) {
             foreach ($uploadedFiles as $imagePath) {
                 $verifyImage = $obj->update(
                     "product_images",
-                    ["image_path" => $imagePath],
+                    ["image_path" => $imagePath, "is_primary" => $primary],
                     "image_id = $ImageID"
                 );
 
@@ -51,6 +53,11 @@ if (isset($_POST['submit'])) {
         <input type="hidden" name="image_id" value="<?php echo $ImageID; ?>">
         <input type="hidden" name="product_id" value="<?php echo $pid; ?>">
         <input type="file" name="imageurl[]" />
+        <select name="is_primary" id="">
+            <option value="">None</option>
+            <option value="1">Primary</option>
+            <option value="0">Non-Primary</option>
+        </select>
         <button type="submit" name="submit">Submit</button>
     </form>
 
