@@ -74,8 +74,8 @@ function ShowProduct($result)
         $html .= '</form>';
         $html .= '</td>';
         $html .= '<td>';
-        $html .= '<form method="POST" action="DeleteProduct.php">';
-        $html .= '<input type="hidden" name="id" value="' . $productId . '">';
+        $html .= '<form method="POST" action="php-files/delete.php">';
+        $html .= '<input type="hidden" name="product_id" value="' . $productId . '">';
         $html .= '<input type="submit" value="Delete">';
         $html .= '</form>';
         $html .= '</td>';

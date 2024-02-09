@@ -47,9 +47,9 @@ if (isset($_POST['submit'])) {
         );
 
         if ($verify) {
-            // $result = $obj->getResult();
+            $result = $obj->getResult();
             // print_r($result);
-            // $product_id = $result[0];
+            $product_id = $result[0];
             // echo $product_id;
 
             // Insert product images if files were uploaded
