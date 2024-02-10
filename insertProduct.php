@@ -1,5 +1,5 @@
 <?php
-
+include './header.php';
 include './php-files/config.php';
 
 $obj = new Database();
@@ -90,6 +90,56 @@ $result = $obj->getResult();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./css/main.css">
+    <style>
+        form {
+            width: 50%;
+            /* Adjust the width as needed */
+            margin: auto;
+            /* Center the form horizontally */
+            margin-bottom: 20px;
+        }
+
+        form input[type="text"],
+        form select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        form select {
+            height: 40px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #45a049;
+        }
+
+        /* Style for file input */
+        form input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            background-color: #f9f9f9;
+        }
+    </style>
 </head>
 
 <body>
@@ -142,8 +192,6 @@ $result = $obj->getResult();
                     }
                 });
             });
-
-
         })
     </script>
 </body>

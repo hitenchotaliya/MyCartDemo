@@ -1,4 +1,5 @@
 <?php
+include './header.php';
 include './php-files/config.php';
 
 
@@ -24,45 +25,136 @@ $images = $obj->getResult();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="./js/js.js"></script>
+    <style>
+        /* Main container */
+        .main {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            /* Align items to the top */
+        }
+
+        /* Product image container */
+        .image-container {
+            margin-right: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            /* Center align images and buttons */
+        }
+
+        /* Product image styles */
+        .product-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+            /* Maintain aspect ratio */
+            display: block;
+            margin-bottom: 10px;
+            /* Space between image and buttons */
+        }
+
+        /* Button styles */
+        .button-container button {
+            padding: 5px 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Delete button styles */
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        /* Update button styles */
+        .update-btn {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        /* Add images button styles */
+        .add-images-btn {
+            padding: 10px 20px;
+            background-color: #2196F3;
+            color: white;
+            margin-bottom: 20px;
+            /* Add margin at the bottom */
+        }
+
+        /* Back button styles */
+        .back-btn {
+            background-color: #999;
+            color: white;
+            margin-bottom: 20px;
+            /* Add margin at the bottom */
+        }
+
+        /* Image upload form styles */
+        .upload-form {
+            margin-top: 20px;
+        }
+
+        /* Fixed position for buttons */
+        .fixed-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            text-align: center;
+            z-index: 999;
+            /* Ensure buttons are above other content */
+        }
+    </style>
 </head>
 
 <body>
-
-    <?php
-    if ($images) {
-        foreach ($images as $image) {
-            $imagePath = $image['image_path'];
-            $imageId = $image['image_id'];
-            // Display the image
-            echo "<img src='$imagePath' alt='Product Image' style='max-width: 100px;'>";
-
-            // Display delete button for each image
-            echo "<form action='php-files/delete.php' method='post'>";
-            echo "<input type='hidden' name='image_id' value='$imageId'>";
-            echo "<input type='hidden' name='product_id' value='$pid'>";
-            echo "<button class='delete_confirm' type='submit' name='delete'>Delete</button>";
-            echo "</form>";
-
-            // Display update button for each image
-            echo "<form action='update_image.php' method='post'>";
-            echo "<input type='hidden' name='image_id' value='$imageId'>";
-            echo "<input type='hidden' name='product_id' value='$pid'>";
-            echo "<button type='submit' name='update'>Update</button>";
-            echo "</form>";
+    <div class="main">
+        <?php
+        $count = 0;
+        if ($images) {
+            foreach ($images as $image) {
+                $imagePath = $image['image_path'];
+                $imageId = $image['image_id'];
+        ?>
+                <div class="image-container">
+                    <img src="<?php echo $imagePath ?>" alt="Product Image" class="product-image">
+                    <div class="button-container">
+                        <form action="php-files/delete.php" method="post">
+                            <input type="hidden" name="image_id" value="<?php echo $imageId ?>">
+                            <input type="hidden" name="product_id" value="<?php echo $pid ?>">
+                            <button class="delete-btn" class="delete_confirm" type="submit" name="delete">Delete</button>
+                        </form>
+                        <form action="update_image.php" method="post">
+                            <input type="hidden" name="image_id" value="<?php echo $imageId ?>">
+                            <input type="hidden" name="product_id" value="<?php echo $pid ?>">
+                            <button class="update-btn" type="submit" name="update">Update</button>
+                        </form>
+                    </div>
+                </div>
+        <?php
+                $count++;
+                // Break to new line after 5 images
+                if ($count % 5 == 0) {
+                    echo '<br>'; // Add line break
+                }
+            }
+        } else {
+            echo "Images not Found";
         }
-    } else {
-        echo "Images not Found";
-    }
-    ?>
+        ?>
+    </div>
 
-    <form action="addImage.php" method="post">
-        <input type="hidden" name="id" value="<?php echo $pid ?>">
-        <input type="submit" value="Add images">
-    </form>
-    <button><a href="product.php">Back</a></button>
+    <div class="fixed-buttons">
+        <form action="addImage.php" method="post" class="upload-form">
+            <input type="hidden" name="id" value="<?php echo $pid ?>">
+            <input type="submit" value="Add images" class="add-images-btn">
+        </form>
 
+        <!-- Back button -->
+        <button class="back-btn"><a href="product.php">Back</a></button>
+    </div>
 </body>
 
 </html>

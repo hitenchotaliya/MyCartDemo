@@ -151,7 +151,6 @@ $(document).ready(function () {
         }
     });
 
-    console.log("Document ready, delete confirmation script running...");
 
     $('.deleted_confirm').on('click', function (e) {
         // Prevent the default form submission
@@ -165,6 +164,9 @@ $(document).ready(function () {
             $(this).closest('form').submit();
         }
     });
+    console.log("Document ready, delete confirmation script running...");
+
+
     // var searchRequest;
 
     // var searchTimeout;
