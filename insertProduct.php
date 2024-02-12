@@ -145,15 +145,15 @@ $result = $obj->getResult();
 <body>
     <div class="main">
         <form action="" method="post" enctype="multipart/form-data">
-            Product Name: <input type="text" name="title"><br><br>
-            Product Description: <input type="text" name="description"><br><br>
+            Product Name: <input type="text" name="title" required><br><br>
+            Product Description: <input type="text" name="description" required><br><br>
             is_active :
             <select name="is_active" id="">
                 <option value="1">Active</option>
                 <option value="0">InActive</option>
             </select><br><br>
             Category:
-            <select name="categoryID" id="categoryID">
+            <select name="categoryID" id="categoryID" required>
                 <?php
                 foreach ($Categories as $category) {
                     $categoryId = $category["category_id"];

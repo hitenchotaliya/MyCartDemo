@@ -26,23 +26,20 @@ function status_confirm(tableName) {
 }
 
 function delete_confirm(tableName) {
-    // Collect all the selected checkboxes
     var selectedIds = [];
     $('.checkbox:checked').each(function () {
         selectedIds.push($(this).val());
     });
 
     if (selectedIds.length > 0) {
-        // Append the selected IDs and table name to the form data
         $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
         $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
 
-        // Ask for confirmation
         var result = confirm("Are you sure you want to delete the selected item(s)?");
         if (result) {
-            return true; // Proceed with the action
+            return true; 
         } else {
-            return false; // Cancel the action
+            return false; 
         }
     } else {
         alert('Select at least 1 record to delete.');

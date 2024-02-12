@@ -19,6 +19,10 @@ if (isset($_POST['submit'])) {
     $active = $_POST['is_active'];
     $parentId = $_POST['parentCategoryID'];
 
+    if ($parentId == '' || $parentId == 'NULL') {
+        $parentId = NULL;
+    }
+
     // Update the category
     $update =  $obj->update(
         "categories",
@@ -124,11 +128,7 @@ if (isset($_POST['submit'])) {
             <button type="submit" name="submit">Update Category</button>
 
         </form>
-        <?php
-        if (isset($err)) {
-            echo $err;
-        }
-        ?>
+
     </div>
 </body>
 

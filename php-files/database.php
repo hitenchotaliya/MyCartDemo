@@ -31,6 +31,7 @@ class Database
     }
 
 
+    //Passing sql
     public function sql($sql)
     {
         $this->myQuery = $sql; //Pass back to sql
@@ -45,6 +46,7 @@ class Database
         }
     }
 
+    //Set of result
     public function  getResult()
     {
         $val = $this->result;
@@ -52,6 +54,8 @@ class Database
         return $val;
     }
 
+
+    //Select query
     public function select($table, $rows = "*", $join = null, $where = null, $order = null, $limit = null)
     {
         //Before selection we check that is there any table available in db or not
@@ -157,14 +161,18 @@ class Database
     }
 
     //Update
-
     public function update($table, $Values = array(), $where = "", $in = null)
     {
         if ($this->TableExist($table)) {
             $args = array();
 
             foreach ($Values as $keys => $value) {
-                $args[] = "$keys='$value'";
+                // $args[] = "$keys='$value'";
+                if ($value === null) {
+                    $args[] = "$keys=NULL";
+                } else {
+                    $args[] = "$keys='$value'";
+                }
             }
 
             $sql = "UPDATE $table SET " . implode(', ', $args);
@@ -175,7 +183,7 @@ class Database
             if ($in != "") {
                 $sql .= " IN ($in)";
             }
-            //echo $sql;
+            echo $sql;
             if ($this->mysqli->query($sql)) {
                 // Return affected rows
                 array_push($this->result, $this->mysqli->affected_rows);
@@ -214,6 +222,7 @@ class Database
             return false;
         }
     }
+
     //Pagination db
     public function Pagination($table, $join = null, $where = null, $limit = null)
     {
@@ -298,6 +307,7 @@ class Database
         }
     }
 
+    //File handling
     public function uploadFiles($filesArray, $destinationFolder)
     {
         $uploadedFiles = [];
@@ -327,6 +337,7 @@ class Database
         return $uploadedFiles;
     }
 
+    //search
     public function search($table, $rows = "*", $join = null, $where = null, $order = null, $limit = null, $search = null, $searchColumn = null)
     {
         // Before selection, check if the table exists in the database
@@ -379,12 +390,6 @@ class Database
         }
     }
 
-
-
-
-
-
-
     // public function uploadFiles($filesArray, $destinationFolder)
     // {
     //     $uploadedFiles = [];
@@ -397,7 +402,7 @@ class Database
     //         if (move_uploaded_file($filesArray['tmp_name'][$key], $destinationPath)) {
     //             $uploadedFiles[] = $destinationPath;
     //         } else {
-    //             // Handle error if file upload fails
+    //             
     //             array_push($this->result, $this->mysqli->error);
     //             //  array_push($this->result, "Failed to upload file: " . $val);
     //         }

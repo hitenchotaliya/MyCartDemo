@@ -43,10 +43,9 @@ if (isset($_POST['submit'])) {
 
     if (!$updateProduct) {
         // Handle error if product update fails
-        echo "Failed to update product information.\n";
-        exit; // Terminate further execution
+        $err =  "Failed to update product information.\n";
+        //exit;
     }
-    // Redirect to product.php after successful update
     header("Location: product.php");
     exit;
 }
@@ -101,37 +100,42 @@ if (isset($_POST['submit'])) {
 </head>
 
 <body>
-    <form action="" method="post" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="<?php echo $id; ?>">
+    <div class="main">
 
-        Product Name: <input type="text" name="title" value="<?php echo $selectedProduct[0]['title']; ?>"><br><br>
-        Product Description: <input type="text" name="description" value="<?php echo $selectedProduct[0]['description']; ?>"><br><br>
-        is_active :
-        <select name="is_active" id="">
-            <option value="1" <?php echo ($selectedProduct[0]['is_active'] == 1) ? 'selected' : ''; ?>>Active</option>
-            <option value="0" <?php echo ($selectedProduct[0]['is_active'] == 0) ? 'selected' : ''; ?>>InActive</option>
-        </select><br><br>
 
-        Categories:
-        <select name="categoryID" id="categoryID">
-            <option value="NULL">None</option>
-            <?php
-            foreach ($Categories as $category) {
-                $categoryId = $category["category_id"];
-                $categoryName = $category["title"];
-                $selected = ($categoryId == $selectedProduct[0]["category_id"]) ? 'selected' : '';
-                echo "<option value='$categoryId' $selected>$categoryName</option>";
-            }
-            ?>
-        </select><br><br>
+        <form action="" method="post" enctype="multipart/form-data" id="productForm">
+            <input type="hidden" name="id" value="<?php echo $id; ?>">
 
-        Subcategory:
-        <select name="subcategoryID" id="subcategoryID">
-            <!-- Options will be populated dynamically -->
-        </select>
-        <button type="submit" name="submit">Submit</button>
-    </form>
+            Product Name: <input type="text" name="title" value="<?php echo $selectedProduct[0]['title']; ?>" required><br><br>
+            Product Description: <input type="text" name="description" value="<?php echo $selectedProduct[0]['description']; ?>" required><br><br>
+            is_active :
+            <select name="is_active" id="">
+                <option value="1" <?php echo ($selectedProduct[0]['is_active'] == 1) ? 'selected' : ''; ?>>Active</option>
+                <option value="0" <?php echo ($selectedProduct[0]['is_active'] == 0) ? 'selected' : ''; ?>>InActive</option>
+            </select><br><br>
 
+            Categories:
+            <select name="categoryID" id="categoryID" required>
+                <option value="NULL">None</option>
+                <?php
+                foreach ($Categories as $category) {
+                    $categoryId = $category["category_id"];
+                    $categoryName = $category["title"];
+                    $selected = ($categoryId == $selectedProduct[0]["category_id"]) ? 'selected' : '';
+                    echo "<option value='$categoryId' $selected>$categoryName</option>";
+                }
+                ?>
+            </select><br><br>
+
+            Subcategory:
+            <select name="subcategoryID" id="subcategoryID">
+                <!-- Options will be populated dynamically -->
+            </select>
+            <button type="submit" name="submit">Submit</button>
+        </form>
+        <div class="err" id="errorMessage" style="color: red; display: none;">You can't save the product without selecting a category.</div>
+
+    </div>
     <script>
         $(document).ready(function() {
             // Populate subcategories based on selected category
@@ -153,6 +157,19 @@ if (isset($_POST['submit'])) {
                     }
                 });
             });
+
+            // Form submission validation
+            $('#productForm').submit(function(event) {
+                console.log("Form submitted");
+                var selectedCategory = $('#categoryID').val();
+                console.log("Selected Category:", selectedCategory);
+                if (selectedCategory === 'NULL') {
+                    $('#errorMessage').show();
+                    console.log("Error message displayed"); // error message is displayed
+                    event.preventDefault(); // Prevent form submission
+                }
+            });
+
         });
     </script>
 </body>

@@ -102,8 +102,8 @@ $Categories = $obj->getResult();
 
         <form action="" method="POST">
 
-            CategoryName: <input type="text" name="categoryname"><br><br>
-            is_active : <select name="is_active" id="">
+            CategoryName: <input type="text" name="categoryname" required><br><br>
+            is_active : <select name="is_active" id="" required>
                 <option value="1">Active</option>
                 <option value="0">InActive</option>
             </select><br><br>
