@@ -87,7 +87,7 @@
             $html .= '<td>';
             $html .= '<form method="POST" action="./php-files/delete.php">';
             $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            $html .= '<input  class="delete_confirm" type="submit" value="Remove">';
+            $html .= '<input  class="deleted_confirm" type="submit" value="Remove">';
             $html .= '</form>';
             $html .= '</td>';
             $html .= '<td>';
@@ -158,6 +158,13 @@
                     ?>
 
                 </div>
+            </div>
+            <div class="error">
+                <?php
+                if (isset($_GET['error_message'])) {
+                    echo "You can not delete parent record directly " . $_GET['error_message'];
+                }
+                ?>
             </div>
 
             <div class="status">
@@ -281,5 +288,20 @@
                     return false;
                 }
             }
+
+            // $(document).ready(function() {
+            //     $('.deleted_confirm').on('click', function(e) {
+            //         // Prevent the default form submission
+            //         e.preventDefault();
+
+            //         // Confirm deletion
+            //         var confirmation = confirm("Are you sure you want to delete this record?");
+
+            //         // If user confirms deletion, submit the form
+            //         if (confirmation) {
+            //             $(this).closest('form').submit();
+            //         }
+            //     });
+            // })
         </script>
     </body>

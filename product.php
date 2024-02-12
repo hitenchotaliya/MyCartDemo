@@ -111,7 +111,7 @@ function ShowProduct($result)
         $html .= '<tr>';
         $html .= '<td><input type="checkbox" name="checked_id[]" class="checkbox" value="' . $productId . '" /></td>';
         $html .= '<td>' . $rowNumber++ . '</td>';
-        $html .= '<td>' . $productId . '</td>';
+        // $html .= '<td>' . $productId . '</td>';
         $html .= '<td>' . $row['title'] . '</td>';
         $html .= '<td>' . $row['category_title'] . '</td>';
         $html .= '<td>' . $row['description'] . '</td>';
@@ -131,7 +131,7 @@ function ShowProduct($result)
         $html .= '<td>';
         $html .= '<form method="POST" action="php-files/delete.php">';
         $html .= '<input type="hidden" name="product_id" value="' . $productId . '">';
-        $html .= '<input class="delete_confirm" type="submit" value="Delete">';
+        $html .= '<input class="deleted_confirm" type="submit" value="Delete">';
         $html .= '</form>';
         $html .= '</td>';
         $html .= '<td>';
@@ -156,7 +156,6 @@ function ShowProduct($result)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
-    <script src="./js/js.js"></script>
 
 </head>
 
@@ -180,7 +179,7 @@ function ShowProduct($result)
                 <tr>
                     <th><input type="checkbox" id="select_all" value="" /></th>
                     <th>Index</th>
-                    <th>Product ID</th>
+                    <!-- <th>Product ID</th> -->
                     <th>Title</th>
                     <th>Category title</th>
                     <th>Product Description</th>
@@ -251,6 +250,13 @@ function ShowProduct($result)
         <div class="pagination">
             <?php
             echo $obj->Pagination("products", null, null, $setLimit);
+            ?>
+        </div>
+        <div class="error">
+            <?php
+            if (isset($_GET['error_message'])) {
+                echo "You can not delete parent record directly " .$_GET['error_message'];
+            }
             ?>
         </div>
     </div>
