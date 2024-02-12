@@ -15,6 +15,13 @@
             $orderby = " title DESC";
         }
     }
+    if (isset($_GET['activestatus'])) {
+        if ($_GET['activestatus'] === 'active') {
+            $activecategory = " is_active = 1";
+        } else if ($_GET['activestatus'] === 'deactive') {
+            $activecategory = " is_active = 0";
+        }
+    }
 
     if (isset($_GET['dsort'])) {
         if ($_GET['dsort'] === 'r-added') {
@@ -38,6 +45,9 @@
         $categories = $obj->getResult();
     } else if (isset($_GET['dsort']) && $_GET['dsort'] !== '') {
         $obj->select("categories", "*", null, null, $datesort, $setLimit);
+        $categories = $obj->getResult();
+    } else if (isset($_GET['activestatus']) && $_GET['activestatus'] !== '') {
+        $obj->select("categories", "*", null, $activecategory, null, $setLimit);
         $categories = $obj->getResult();
     } else {
         // No search query, retrieve all categories
@@ -218,6 +228,19 @@
                                                     } ?>>Last-Updated</option>
                         <!-- SELECT * FROM categories ORDER BY title DESC; -->
                         <!-- SELECT * FROM categories ORDER BY title ASC; -->
+                    </select>
+                    <input type="submit" value="Submit">
+                </form>
+                <form action="" method="GET">
+                    <label for="activestatus">Sort:</label>
+                    <select name="activestatus" id="sort">
+                        <option value="">Select Option</option>
+                        <option value="active" <?php if (isset($_GET['activestatus']) && $_GET['activestatus'] == "active") {
+                                                    echo "selected";
+                                                } ?>>Active</option>
+                        <option value="deactive" <?php if (isset($_GET['activestatus']) && $_GET['activestatus'] == "deactive") {
+                                                        echo "selected";
+                                                    } ?>>Deactive</option>
                     </select>
                     <input type="submit" value="Submit">
                 </form>
