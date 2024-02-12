@@ -5,7 +5,7 @@ $obj = new Database();
 $id = $_POST['id'];
 
 // Fetch all categories for the drop-down
-$obj->select("categories");
+$obj->select("categories", "*", null, "category_id != $id");
 $allCategories = $obj->getResult();
 
 // Fetch the category details for the given ID
