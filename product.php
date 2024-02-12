@@ -72,8 +72,8 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
     $obj->select(
         "products",
         "DISTINCT products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path, product_images.is_primary",
-        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id AND product_images.is_primary = 1", // Consider only primary images
-        "categories.category_id = products.category_id",
+        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id  AND product_images.is_primary = 1", // Consider only primary images
+        "categories.is_active = 1 AND categories.category_id = products.category_id",
         null,
         $setLimit,
     );
@@ -108,6 +108,7 @@ function ShowProduct($result)
             $imagePath = $row['image_path']; // Assign image path
         }
 
+
         $html .= '<tr>';
         $html .= '<td><input type="checkbox" name="checked_id[]" class="checkbox" value="' . $productId . '" /></td>';
         $html .= '<td>' . $rowNumber++ . '</td>';
@@ -119,7 +120,9 @@ function ShowProduct($result)
         $html .= '<td>';
         // Display the primary image for the product
         if (!empty($imagePath)) {
-            $html .= '<img src="' . $imagePath . '" alt="Product Image" style="max-width: 50px;">';
+            $html .= '<img src="' . $imagePath  . '" alt="Product Image" style="max-width: 50px;">';
+        } else {
+            $html .= 'No primary image';
         }
         $html .= '</td>';
         $html .= '<td>';
@@ -255,7 +258,7 @@ function ShowProduct($result)
         <div class="error">
             <?php
             if (isset($_GET['error_message'])) {
-                echo "You can not delete parent record directly " .$_GET['error_message'];
+                echo "You can not delete parent record directly " . $_GET['error_message'];
             }
             ?>
         </div>
