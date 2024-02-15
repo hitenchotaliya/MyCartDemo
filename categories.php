@@ -150,6 +150,7 @@
 
                     </div>
                 </form>
+                <div class="error-message" style="color: red;"></div>
             </div>
             <div id="table-data" class="table-sortable">
                 <table border="1">

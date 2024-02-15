@@ -458,5 +458,29 @@ $(document).ready(function () {
         }
     });
 
+
+    //Search Validation
+    $('input[name="search"]').on('input', function () {
+        var searchTerm = $(this).val().trim(); // Trim to remove leading and trailing spaces
+        var regex = /^[a-zA-Z0-9]+(?: [a-zA-Z0-9]+)*$/; // Regular expression to allow only letters, numbers, and spaces between words
+
+        // Check if the input is empty or contains only spaces
+        if (searchTerm === '') {
+            $('.error-message').text('');
+            $('input[type="submit"]').prop('disabled', true);
+            return;
+        }
+
+        if (!regex.test(searchTerm)) {
+            // Display error message if special characters are found
+            $('.error-message').text('Please provide a valid input for search.');
+            $('input[type="submit"]').prop('disabled', true); // Disable submit button
+        } else {
+            $('.error-message').text(''); // Clear error message 
+            $('input[type="submit"]').prop('disabled', false);
+        }
+    });
+
+
     console.log("Document ready, delete confirmation script running...");
 });

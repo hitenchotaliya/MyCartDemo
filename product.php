@@ -194,6 +194,7 @@ function ShowProduct($result)
 
                 </div>
             </form>
+            <div class="error-message" style="color: red;"></div>
         </div><br>
 
         <table class="table-sortable">
