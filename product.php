@@ -144,13 +144,13 @@ function ShowProduct($result)
     </button>';
         $html .= '</td>';
         $html .= '<td>';
-        $html .= '<form method="POST" action="ImageManage.php">';
+        $html .= '<form class="record-custom-form" method="POST" action="ImageManage.php">';
         $html .= '<input type="hidden" name="id" value="' . $productId . '">';
         $html .= '<input type="submit" value="Manage Image">';
         $html .= '</form>';
         $html .= '</td>';
         $html .= '<td>';
-        $html .= '<form method="POST" action="productDetail.php">';
+        $html .= '<form class="record-custom-form" method="POST" action="productDetail.php">';
         $html .= '<input type="hidden" name="id" value="' . $productId . '">';
         $html .= '<input type="submit" value="Detail">';
         $html .= '</form>';

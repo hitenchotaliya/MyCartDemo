@@ -249,7 +249,7 @@ body {
 }
 
 .custom-form button:hover {
-    background-color: #007bff;
+    background-color: #0060c6;
 }
 
 .custom-form input[type="file"] {
@@ -261,6 +261,24 @@ body {
     box-sizing: border-box;
     background-color: #f9f9f9;
 }
+
+.record-custom-form input[type="submit"] {
+    padding: 8px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    align-items: center;
+}
+
+.record-custom-form input[type="submit"]:hover {
+
+    background-color: #0060c6;
+    color: white;
+}
+
 
 .main-image {
     display: flex;
