@@ -54,53 +54,11 @@ $Categories = $obj->getResult();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Category</title>
     <link rel="stylesheet" href="./css/main.css">
-    <style>
-        form {
-            width: 50%;
-            /* Adjust the width as needed */
-            margin: auto;
-            /* Center the form horizontally */
-            margin-bottom: 20px;
-        }
-
-        form input[type="text"],
-        form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        form select {
-            height: 40px;
-        }
-
-        form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        form button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 
 <body>
-    <!-- <div class="main"> -->
-
     <div class="main">
-
-
-        <form action="" method="POST">
+        <form action="" method="POST" class="custom-form">
 
             CategoryName: <input type="text" name="categoryname" required><br><br>
             is_active : <select name="is_active" id="" required>
@@ -122,7 +80,6 @@ $Categories = $obj->getResult();
 
         </form>
     </div>
-    <!-- </div> -->
 </body>
 
 </html>

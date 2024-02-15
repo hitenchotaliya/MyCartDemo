@@ -7,6 +7,7 @@ body {
     overflow-x: hidden;
     height: 100%;
     margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
@@ -38,6 +39,28 @@ body {
     text-decoration: underline;
     color: #DBE2EF;
     margin-right: 100px;
+}
+
+
+.logout .tooltiptext {
+    text-size-adjust: 5px;
+    visibility: hidden;
+    width: 120px;
+    /* background-color: black; */
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    text-decoration: none;
+
+    /* Position the tooltip */
+    position: relative;
+    z-index: -1;
+}
+
+.logout:hover .tooltiptext {
+    visibility: visible;
+    margin-left: 8px;
 }
 
 .main {
@@ -73,9 +96,10 @@ body {
     color: #F9F7F7;
     display: block;
     text-decoration: none;
-    text-transform: uppercase;
     padding: 20px;
 }
+
+
 
 .pagination {
     display: flex;
@@ -134,7 +158,7 @@ body {
 .sort input[type="submit"],
 .sort button {
     padding: 5px 10px;
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -143,7 +167,7 @@ body {
 
 .btn-danger {
     padding: 5px 10px;
-    background-color: #45a049;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -151,12 +175,12 @@ body {
 }
 
 .btn-danger:hover {
-    background-color: red;
+    background-color: #c82333;
 }
 
 .sort input[type="submit"]:hover,
 .sort button:hover {
-    background-color: #45a049;
+    background-color: #007bff;
 }
 
 .status {
@@ -182,7 +206,7 @@ body {
 .status input[type="submit"] {
     margin-left: 2px;
     padding: 5px 10px;
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -191,4 +215,291 @@ body {
 
 .status input[type="submit"]:hover {
     background-color: #c82333;
+}
+
+.custom-form {
+    width: 50%;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.custom-form input[type="text"],
+.custom-form select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.custom-form select {
+    height: 40px;
+}
+
+.custom-form button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.custom-form button:hover {
+    background-color: #007bff;
+}
+
+.custom-form input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+}
+
+.main-image {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    /* Align items to the top */
+}
+
+/* Product image container */
+.image-container {
+    align-items: center;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    /* Center align images and buttons */
+}
+
+/* Product image styles */
+.product-image {
+    width: 230px;
+    height: 200px;
+    object-fit: cover;
+    display: block;
+    margin-bottom: 10px;
+    /* Space between image and buttons */
+}
+
+/* Button styles */
+.button-container button {
+    padding: 5px 10px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Delete button styles */
+.delete-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Update button styles */
+.update-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+/* Add images button styles */
+.add-images-btn {
+
+    border: 0;
+    border-radius: 5px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    margin-bottom: 10px;
+    /* Add margin at the bottom */
+}
+
+.add-images-btn:hover {
+    background-color: #007bff;
+}
+
+/* Back button styles */
+.back-btn {
+    border: 0;
+    border-radius: 5px;
+    background-color: #3F72AF;
+    margin-bottom: 20px;
+    cursor: pointer;
+    padding: 8px 15px;
+    display: inline-block;
+    outline: none;
+}
+
+/* Style for hover state */
+.back-btn:hover {
+    background-color: #315a8b;
+}
+
+.back-btn a {
+    text-decoration: none;
+    color: white;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Image upload form styles */
+.upload-form {
+    margin-top: 20px;
+}
+
+.button-group {
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.preview-image {
+    display: inline-block;
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.error-message {
+    color: #c82333;
+    margin-top: 10px;
+}
+
+#table-data {
+    margin-top: 20px;
+    /* Add margin at the top */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th,
+table td {
+    padding: 8px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+thead {
+    background-color: #f2f2f2;
+    /* Light gray background for header */
+}
+
+/* Style for checkbox in the header */
+#select_all {
+    transform: scale(1.5);
+    /* Increase checkbox size */
+}
+
+/* Style for the Update and Delete buttons */
+table .update-btn,
+table .delete-btn {
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    /* Remove underline from buttons */
+}
+
+/* Style for the Status button */
+table .status-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    /* Remove underline from button */
+}
+
+/* Style for active status */
+table .status-active {
+    color: green;
+}
+
+/* Style for inactive status */
+table .status-inactive {
+    color: #c82333;
+}
+
+
+/* Switch On Off Css */
+.input-switch {
+    display: none;
+}
+
+.label-switch {
+    display: inline-block;
+    position: relative;
+}
+
+.label-switch::before,
+.label-switch::after {
+    content: "";
+    display: inline-block;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.label-switch::before {
+    width: 3em;
+    height: 1em;
+    border: 1px solid #757575;
+    border-radius: 4em;
+    background: #888888;
+}
+
+.label-switch::after {
+    position: absolute;
+    left: 0;
+    top: -20%;
+    width: 1.5em;
+    height: 1.5em;
+    border: 1px solid #757575;
+    border-radius: 4em;
+    background: #ffffff;
+}
+
+.input-switch:checked~.label-switch::before {
+    background: #757575;
+    border-color: #757575;
+}
+
+.input-switch:checked~.label-switch::after {
+    left: unset;
+    right: 0;
+    background: #757575;
+    border-color: #757575;
+}
+
+.info-text {
+    display: inline-block;
 }

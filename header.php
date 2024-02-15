@@ -16,6 +16,7 @@ if (!isset($_SESSION['admin_name'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
     <link rel="stylesheet" href="./css/main.css">
 </head>
 
@@ -23,7 +24,7 @@ if (!isset($_SESSION['admin_name'])) {
     <div class="header">
         <div class="header-left">ONLINE SHOPPING</div>
         <div class="header-right">HI ADMIN</div>
-        <div class="logout"><a href="./php-files/logout.php">Logout</a></div>
+        <div class="logout"><a href="./php-files/logout.php"><i class="fa-solid fa-arrow-right-from-bracket"><span class="tooltiptext">Logout</span></i></a></div>
     </div>
     <div class="sidebar">
         <ul class="menu">
@@ -37,6 +38,8 @@ if (!isset($_SESSION['admin_name'])) {
     </div>
 
     <script src="./js/js.js"></script>
+    <script src="./js/table-sort.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 
 </html>

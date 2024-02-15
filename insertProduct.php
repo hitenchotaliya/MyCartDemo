@@ -91,60 +91,11 @@ $result = $obj->getResult();
     <title>Add</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="./css/main.css">
-    <style>
-        form {
-            width: 50%;
-            /* Adjust the width as needed */
-            margin: auto;
-            /* Center the form horizontally */
-            margin-bottom: 20px;
-        }
-
-        form input[type="text"],
-        form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        form select {
-            height: 40px;
-        }
-
-        form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        form button:hover {
-            background-color: #45a049;
-        }
-
-        /* Style for file input */
-        form input[type="file"] {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-            background-color: #f9f9f9;
-        }
-    </style>
 </head>
 
 <body>
     <div class="main">
-        <form action="" method="post" enctype="multipart/form-data">
+        <form action="" method="post" enctype="multipart/form-data" class="custom-form">
             Product Name: <input type="text" name="title" required><br><br>
             Product Description: <input type="text" name="description" required><br><br>
             is_active :
@@ -170,30 +121,6 @@ $result = $obj->getResult();
             <button type="submit" name="submit">Submit</button>
         </form>
     </div>
-
-    <script>
-        $(document).ready(function() {
-
-            $('#categoryID').change(function() {
-                var categoryId = $(this).val();
-                $.ajax({
-                    url: './php-files/get_subcategories.php', // PHP script to fetch subcategories
-                    type: 'post',
-                    data: {
-                        categoryId: categoryId
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        var options = '<option value="">Select Subcategory</option>';
-                        for (var i = 0; i < response.length; i++) {
-                            options += '<option value="' + response[i].category_id + '">' + response[i].title + '</option>';
-                        }
-                        $('#subcategoryID').html(options);
-                    }
-                });
-            });
-        })
-    </script>
 </body>
 
 </html>

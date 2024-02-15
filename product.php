@@ -19,6 +19,9 @@ if (isset($_GET['categoryID'])) {
     $SortID = $_GET['categoryID'];
 }
 
+if (isset($_GET['search'])) {
+    $svalue = $_GET['search'];
+}
 
 
 // $offset = ($page - 1) * $setLimit;
@@ -86,11 +89,9 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
 function ShowProduct($result)
 {
 
-
     if (empty($result)) {
         return '<tr><td colspan="11">No records found</td></tr>';
     }
-
 
     $html = '';
     $rowNumber = 1;
@@ -115,7 +116,7 @@ function ShowProduct($result)
         // $html .= '<td>' . $productId . '</td>';
         $html .= '<td>' . $row['title'] . '</td>';
         $html .= '<td>' . $row['category_title'] . '</td>';
-        $html .= '<td>' . $row['description'] . '</td>';
+        // $html .= '<td>' . $row['description'] . '</td>';
         $html .= '<td>' . $isActive . '</td>';
         $html .= '<td>';
         // Display the primary image for the product
@@ -128,19 +129,30 @@ function ShowProduct($result)
         $html .= '<td>';
         $html .= '<form method="POST" action="NewUpdate.php">';
         $html .= '<input type="hidden" name="id" value="' . $productId . '">';
-        $html .= '<input type="submit" value="Update">';
+        // $html .= '<input type="submit" value="Update">';
+        $html .= '<button type="submit" class="update-btn"><i class="fa-regular fa-pen-to-square"></i></button>';
+
         $html .= '</form>';
         $html .= '</td>';
         $html .= '<td>';
-        $html .= '<form method="POST" action="php-files/delete.php">';
-        $html .= '<input type="hidden" name="product_id" value="' . $productId . '">';
-        $html .= '<input class="deleted_confirm" type="submit" value="Delete">';
-        $html .= '</form>';
+        // $html .= '<form method="POST" action="php-files/delete.php">';
+        // $html .= '<input type="hidden" name="product_id" value="' . $productId . '">';
+        // $html .= '<input class="deleted_confirm" type="submit" value="Delete">';
+        // $html .= '</form>';
+        $html .= '<button class="deleted_confirm delete-btn" data-product_id="' . $productId . '">
+        <i class="fa fa-trash"></i>
+    </button>';
         $html .= '</td>';
         $html .= '<td>';
         $html .= '<form method="POST" action="ImageManage.php">';
         $html .= '<input type="hidden" name="id" value="' . $productId . '">';
-        $html .= '<input type="submit" value="Click">';
+        $html .= '<input type="submit" value="Manage Image">';
+        $html .= '</form>';
+        $html .= '</td>';
+        $html .= '<td>';
+        $html .= '<form method="POST" action="productDetail.php">';
+        $html .= '<input type="hidden" name="id" value="' . $productId . '">';
+        $html .= '<input type="submit" value="Detail">';
         $html .= '</form>';
         $html .= '</td>';
         $html .= '</tr>';
@@ -158,7 +170,10 @@ function ShowProduct($result)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Product</title>
+    <link rel="stylesheet" href="./css/table-sort.css">
+
     <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
 </head>
 
@@ -167,17 +182,21 @@ function ShowProduct($result)
         <h1>Product</h1>
 
 
-        <div class="col-md-7">
+        <div class="col-md-7 search">
             <form action="product.php" method="GET">
-                <div class="input-group search">
-                    <input type="text" name="search" placeholder="Search for...">
-                    <span>
-                        <input type="submit" value="Search" />
+                <div class="input-group">
+                    <input type="text" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
+                                                                                            echo $svalue;
+                                                                                        } ?>">
+                    <span class="input-group-btn">
+                        <input type="submit" value="Search" class="btn btn-primary" />
                     </span>
+
                 </div>
             </form>
-        </div>
-        <table border="1">
+        </div><br>
+
+        <table class="table-sortable">
             <thead>
                 <tr>
                     <th><input type="checkbox" id="select_all" value="" /></th>
@@ -185,12 +204,13 @@ function ShowProduct($result)
                     <!-- <th>Product ID</th> -->
                     <th>Title</th>
                     <th>Category title</th>
-                    <th>Product Description</th>
+                    <!-- <th>Product Description</th> -->
                     <th>Status</th>
                     <th>Image</th>
                     <th>Update</th>
                     <th>Delete</th>
-                    <th>Manage Image</th>
+                    <th>Actions</th>
+                    <th>View</th>
                 </tr>
             </thead>
             <tbody>
@@ -199,18 +219,20 @@ function ShowProduct($result)
         </table>
 
         <div class="status">
-            <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('products');">
+            <!-- <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('products');">
                 <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete" />
-            </form>
+            </form> --> <br>
+            <button type="button" class="btn delete-btn" onclick="delete_confirm('products')"><i class="fa fa-trash"></i></button> &nbsp;
 
-            <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('products');">
-                <label>Status: </label>
-                <select id="action" name="action">
-                    <option value="activate">Activate</option>
-                    <option value="deactivate">Deactivate</option>
-                </select>
-                <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" />
-            </form>
+
+            <!-- <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('products');"> -->
+            <label>Status: </label>
+            <select id="action" name="action">
+                <option value="activate">Activate</option>
+                <option value="deactivate">Deactivate</option>
+            </select>
+            <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" onclick="status_confirm('products')" />
+            <!-- </form> -->
         </div>
         <div class="sort">
             <form action="" method="GET">
@@ -244,10 +266,7 @@ function ShowProduct($result)
                 </select>
                 <input type="submit" value="Submit">
             </form>
-
-
-            <button onclick="window.location.href='<?php echo $product; ?>'">Clear</button>
-
+            <button onclick="window.location.href='<?php echo $product; ?>'"><i class="fa-solid fa-broom"></i></button>
         </div>
 
         <div class="pagination">
@@ -264,59 +283,8 @@ function ShowProduct($result)
         </div>
     </div>
 
-    <script>
-        function status_confirm(tableName) {
-            // Collect all the selected checkboxes
-            var selectedIds = [];
-            $('.checkbox:checked').each(function() {
-                selectedIds.push($(this).val());
-            });
-
-            // Check if any checkboxes are selected
-            if (selectedIds.length > 0) {
-                // Append the selected IDs and table name to the form data
-                $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-                $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
-
-                // Ask for confirmation
-                var result = confirm("Are you sure to change status of selected items?");
-                if (result) {
-                    return true; // Proceed with the action
-                } else {
-                    return false; // Cancel the action
-                }
-            } else {
-                // No checkboxes selected, show an alert
-                alert('Select at least 1 record to change status.');
-                return false; // Cancel the action
-            }
-        }
-
-        function delete_confirm(tableName) {
-            // Collect all the selected checkboxes
-            var selectedIds = [];
-            $('.checkbox:checked').each(function() {
-                selectedIds.push($(this).val());
-            });
-
-            if (selectedIds.length > 0) {
-                // Append the selected IDs and table name to the form data
-                $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-                $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
-
-                // Ask for confirmation
-                var result = confirm("Are you sure you want to delete the selected item(s)?");
-                if (result) {
-                    return true; // Proceed with the action
-                } else {
-                    return false; // Cancel the action
-                }
-            } else {
-                alert('Select at least 1 record to delete.');
-                return false;
-            }
-        }
-    </script>
+    <script src="./js/table-sort.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </body>
 
 </html>

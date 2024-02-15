@@ -183,7 +183,7 @@ class Database
             if ($in != "") {
                 $sql .= " IN ($in)";
             }
-            echo $sql;
+            // echo $sql;
             if ($this->mysqli->query($sql)) {
                 // Return affected rows
                 array_push($this->result, $this->mysqli->affected_rows);

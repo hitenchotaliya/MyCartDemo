@@ -1,51 +1,186 @@
+// function status_confirm(tableName) {
+//     // Collect all the selected checkboxes
+//     var selectedIds = [];
+//     $('.checkbox:checked').each(function () {
+//         selectedIds.push($(this).val());
+//     });
+
+//     // Check if any checkboxes are selected
+//     if (selectedIds.length > 0) {
+//         // Append the selected IDs and table name to the form data
+//         $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
+//         $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
+
+//         // Ask for confirmation
+//         var result = confirm("Are you sure to change status of selected items?");
+//         if (result) {
+//             return true; // Proceed with the action
+//         } else {
+//             return false; // Cancel the action
+//         }
+//     } else {
+//         // No checkboxes selected, show an alert
+//         alert('Select at least 1 record to change status.');
+//         return false; // Cancel the action
+//     }
+// }
+
 function status_confirm(tableName) {
     // Collect all the selected checkboxes
     var selectedIds = [];
     $('.checkbox:checked').each(function () {
         selectedIds.push($(this).val());
     });
-
-    // Check if any checkboxes are selected
+    // console.log(selectedIds);
     if (selectedIds.length > 0) {
-        // Append the selected IDs and table name to the form data
-        $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-        $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
+        // Ask for confirmation using SweetAlert
+        swal({
+            title: "Are you sure?",
+            text: "You want change status",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
 
-        // Ask for confirmation
-        var result = confirm("Are you sure to change status of selected items?");
-        if (result) {
-            return true; // Proceed with the action
-        } else {
-            return false; // Cancel the action
-        }
+                var action = $('#action').val();
+
+                // console.log("Action:", action);
+
+                // Log the form elements to ensure they have the expected values
+                //console.log("Checked IDs:", selectedIds.join(','));
+                //console.log("Table Name:", tableName);
+
+                var checkedIdsString = selectedIds.join(',');
+                var tableNameValue = tableName;
+                var ActionValue = action;
+
+                // Send AJAX request to delete the selected items
+                $.ajax({
+                    url: 'php-files/multi-active.php',
+                    type: 'POST',
+                    data: { checkedIds: checkedIdsString, tableName: tableNameValue, action: ActionValue }, // Serialize form data
+                    success: function (response) {
+                        console.log("Response is: " + response);
+                        if (response == 1) {
+                            swal("Action Successful!", {
+                                icon: "success",
+                            });
+                        } else {
+                            swal("Error Occurred!", {
+                                icon: "error",
+                            });
+                        }
+                    },
+                    error: function () {
+                        // Handle error response
+                        swal("Error!", "Failed to delete selected item(s)!", "error");
+                    }
+                });
+            } else {
+                // Cancel the action
+                swal("Cancelled", "Your data is safe :)", "info");
+            }
+        });
     } else {
-        // No checkboxes selected, show an alert
-        alert('Select at least 1 record to change status.');
-        return false; // Cancel the action
+        // No items selected
+        swal("Error!", "Select at least 1 record to delete.", "error");
     }
 }
 
+// function delete_confirm(tableName) {
+//     // Collect all the selected checkboxes
+//     var selectedIds = [];
+//     $('.checkbox:checked').each(function () {
+//         selectedIds.push($(this).val());
+//     });
+
+//     if (selectedIds.length > 0) {
+//         // Append the selected IDs and table name to the form data
+//         $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
+//         $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
+
+//         // Ask for confirmation
+//         var result = confirm("Are you sure you want to delete the selected item(s)?");
+//         if (result) {
+//             return true; // Proceed with the action
+//         } else {
+//             return false; // Cancel the action
+//         }
+//     } else {
+//         alert('Select at least 1 record to delete.');
+//         return false;
+//     }
+// }
+
+
+
 function delete_confirm(tableName) {
+    // Collect all the selected checkboxes
     var selectedIds = [];
     $('.checkbox:checked').each(function () {
         selectedIds.push($(this).val());
     });
-
+    // console.log(selectedIds);
     if (selectedIds.length > 0) {
-        $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-        $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
+        // Ask for confirmation using SweetAlert
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover the selected item(s)!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
 
-        var result = confirm("Are you sure you want to delete the selected item(s)?");
-        if (result) {
-            return true; 
-        } else {
-            return false; 
-        }
+                // Log the form elements to ensure they have the expected values
+                // console.log("Checked IDs:", selectedIds.join(','));
+                //console.log("Table Name:", tableName);
+
+                var checkedIdsString = selectedIds.join(',');
+                var tableNameValue = tableName;
+
+                // Send AJAX request to delete the selected items
+                $.ajax({
+                    url: 'php-files/multi-delete.php',
+                    type: 'POST',
+                    data: { checkedIds: checkedIdsString, tableName: tableNameValue }, // Serialize form data
+                    success: function (response) {
+                        // Handle success response
+                        // console.log("Data sent to PHP:", { checkedIds: checkedIdsString, tableName: tableNameValue });
+
+                        // console.log("Response from PHP:", response);
+                        const parseValue = JSON.parse(response);
+                        // console.log(parseValue.success);
+                        // Check if response indicates success
+                        if (parseValue.success == true) {
+                            swal("Success!", "Selected item(s) have been deleted successfully!", "success");
+                            $('.checkbox:checked').closest("tr").fadeOut();
+                        } else {
+                            swal("Error!", "Can't delete parent records", "error");
+                        }
+
+                        // Perform any additional actions if needed
+                        // swal("Success!", "Selected item(s) have been deleted successfully!", "success");
+
+                    },
+                    error: function () {
+                        // Handle error response
+                        swal("Error!", "Failed to delete selected item(s)!", "error");
+                    }
+                });
+            } else {
+                // Cancel the action
+                swal("Cancelled", "Your data is safe :)", "info");
+            }
+        });
     } else {
-        alert('Select at least 1 record to delete.');
-        return false;
+        // No items selected
+        swal("Error!", "Select at least 1 record to delete.", "error");
     }
 }
+
+
 
 //JQuery
 $(document).ready(function () {
@@ -118,12 +253,6 @@ $(document).ready(function () {
         }
     });
 
-    //Display code
-    // $('tr.parent').click(function () {
-    //     var parentId = $(this).data('id');
-    //     $('tr.child-of-' + parentId).toggle();
-    // });
-
     //Multiple delete selector
 
     $('#select_all').on('click', function () {
@@ -149,95 +278,185 @@ $(document).ready(function () {
     });
 
 
-    $('.deleted_confirm').on('click', function (e) {
-        // Prevent the default form submission
-        e.preventDefault();
+    //Single Delete Confirm
+    // $('.deleted_confirm').on('click', function (e) {
+    //     // Prevent the default form submission
+    //     e.preventDefault();
 
-        // Confirm deletion
-        var confirmation = confirm("Are you sure you want to delete this record?");
+    //     // Store the reference to the current form
+    //     var form = $(this).closest('form');
 
-        // If user confirms deletion, submit the form
-        if (confirmation) {
-            $(this).closest('form').submit();
-        }
-    });
-    console.log("Document ready, delete confirmation script running...");
+    //     // Display SweetAlert confirmation dialog
+    //     swal({
+    //         title: "Are you sure?",
+    //         text: "Once deleted, you will not be able to recover this!",
+    //         icon: "warning",
+    //         buttons: true,
+    //         dangerMode: true,
+    //     }).then((willDelete) => {
+    //         // If the user confirms deletion, submit the form
+    //         if (willDelete) {
+    //             swal("Deleted Successfully!");
+    //             form.submit();
 
-
-    // var searchRequest;
-
-    // var searchTimeout;
-    // var $searchInput = $("#search");
-
-    // $searchInput.on("keyup", function () {
-    //     clearTimeout(searchTimeout);
-
-    //     // Save the reference to $(this) in a variable
-    //     var $this = $(this);
-
-    //     // Delay the AJAX request by 500 milliseconds after the user stops typing
-    //     searchTimeout = setTimeout(function () {
-    //         var s = $this.val();
-
-    //         // Abort any existing AJAX request
-    //         if (searchRequest) {
-    //             searchRequest.abort();
+    //         } else {
+    //             // Otherwise, do nothing
+    //             swal("Your record is safe!");
     //         }
-
-    //         searchRequest = $.ajax({
-    //             url: "search.php",
-    //             type: "POST",
-    //             data: { search: s },
-    //             dataType: "json",  // Specify JSON dataType
-    //             success: function (data) {
-    //                 // Display the results in the #table-data element
-    //                 $("#table-data").html(buildTree(data));
-    //             },
-    //             error: function (xhr, status, error) {
-    //                 console.error("AJAX error:", status, error);
-    //             }
-    //         });
-    //     }, 500);
+    //     });
     // });
 
-    // function buildTree(categories) {
-    //     // Check if the result set is empty
-    //     if (categories.length === 0) {
-    //         return '<tr><td colspan="7">No records found</td></tr>';
-    //     }
-    //     var html = '';
-    //     var rowNumber = 1;
 
-    //     // Assume you want to display a maximum of 10 results per page
-    //     var limit = 10;
+    //Delete
+    $(document).on("click", ".deleted_confirm", function () {
+        swal({
+            title: "Are you sure?",
+            text: "Once deleted, you will not be able to recover this record!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+            .then((willDelete) => {
+                if (willDelete) {
+                    var id = $(this).data("id");
+                    var product_id = $(this).data("product_id");
+                    var image_id = $(this).data("image_id");
 
-    //     for (var i = 0; i < categories.length; i++) {
-    //         var category = categories[i];
-    //         var isActive = (category['is_active'] == 1) ? 'Active' : 'Inactive';
-    //         html += '<tr>';
-    //         html += '<td>' + rowNumber++ + '</td>';
-    //         html += '<td>' + category['category_id'] + '</td>';
-    //         html += '<td>' + category['parent_category_id'] + '</td>';
-    //         html += '<td>' + category['title'] + '</td>';
-    //         html += '<td>' + isActive + '</td>';
-    //         html += '<td>';
-    //         html += '<form method="POST" action="update.php">';
-    //         html += '<input type="hidden" name="id" value="' + category['category_id'] + '">';
-    //         html += '<input type="submit" value="Update">';
-    //         html += '</form>';
-    //         html += '</td>';
-    //         html += '<td>';
-    //         html += '<form method="POST" action="delete.php">';
-    //         html += '<input type="hidden" name="id" value="' + category['category_id'] + '">';
-    //         html += '<input type="submit" value="Delete">';
-    //         html += '</form>';
-    //         html += '</td>';
-    //         html += '</tr>';
-    //     }
+                    //console.log("Id is " + id);
+                    //console.log("Id of image " + image_id);
 
-    //     return html;
-    // }
+                    var element = this;
+                    // console.log($(this));
+                    $.ajax({
+                        url: "php-files/delete.php",
+                        type: "POST",
+                        data: { id: id, product_id: product_id, image_id: image_id },
+                        success: function (data) {
+                            if (data == 1) {
+                                swal("Deleted Successfully!", {
+                                    icon: "success",
+                                }).then(() => {
+                                    $(element).closest("tr").fadeOut();
+                                    $(element).closest(".image-container").fadeOut();
+                                });
+                            } else {
+                                swal("Can't Delete Parent Record", {
+                                    icon: "error",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+    });
+
+
+    $(document).on("change", ".active_confirm", function () {
+        var id = $(this).siblings('input[name="id"]').val(); // Get the ID value
+        var checked = $(this).is(':checked'); // Check if the checkbox is checked or not
+        var actionText = checked ? "deactivate" : "activate"; // Determine the action text based on checkbox state
+        var confirmationText = checked ? "Once you deactivate this item, you may no longer see products related to it!" : "Are you sure you want to activate this item?";
+
+        swal({
+            title: "Are you sure?",
+            text: confirmationText,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willProceed) => {
+            if (willProceed) {
+                $.ajax({
+                    url: "./php-files/change.php",
+                    type: "POST",
+                    data: {
+                        id: id,
+                        toggle: checked ? "Active" : "Inactive" // Send the state of the checkbox
+                    },
+                    success: function (response) {
+                        // console.log("Response is " + response);
+                        if (response == 1) {
+                            swal("Action Successful!", {
+                                icon: "success",
+                            });
+                        } else {
+                            swal("Error Occurred!", {
+                                icon: "error",
+                            });
+                        }
+                    }
+                });
+            } else {
+                // If the user cancels the action
+                $(this).prop('checked', !checked); // Toggle back the checkbox if the action is canceled
+            }
+        });
+    });
 
 
 
+
+    //Sub category Get 
+    $('#categoryID').change(function () {
+        var categoryId = $(this).val();
+        $.ajax({
+            url: './php-files/get_subcategories.php', // PHP script to fetch subcategories
+            type: 'post',
+            data: {
+                categoryId: categoryId
+            },
+            dataType: 'json',
+            success: function (response) {
+                var options = '<option value="">Select Subcategory</option>';
+                for (var i = 0; i < response.length; i++) {
+                    options += '<option value="' + response[i].category_id + '">' + response[i].title + '</option>';
+                }
+                $('#subcategoryID').html(options);
+            }
+        });
+    });
+    // Form submission validation
+    $('#productForm').submit(function (event) {
+        console.log("Form submitted");
+        var selectedCategory = $('#categoryID').val();
+        console.log("Selected Category:", selectedCategory);
+        if (selectedCategory === 'NULL') {
+            $('#errorMessage').show();
+            console.log("Error message displayed"); // error message is displayed
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+
+
+    //Image Preview
+    $('#file-input').change(function () {
+        $('#image-preview').empty();
+
+        var fileList = this.files;
+
+        for (var i = 0; i < fileList.length; i++) {
+            var file = fileList[i];
+            var reader = new FileReader();
+
+            reader.onload = function (event) {
+                var img = $('<img>').attr('src', event.target.result)
+                    .css({
+                        'max-width': '200px',
+                        'max-height': '200px',
+                        'margin-right': '10px'
+                    });
+
+
+                // Create div to contain image and remove button
+                var previewContainer = $('<div>').addClass('preview-image')
+                    .append(img);
+
+
+                $('#image-preview').append(previewContainer);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    });
+
+    console.log("Document ready, delete confirmation script running...");
 });

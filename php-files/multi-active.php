@@ -2,14 +2,14 @@
 include 'config.php';
 $obj = new Database();
 
-if (isset($_POST['bulk_edit_submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-
+    // echo $_POST;
     // If id array is not empty 
-    if (!empty($_POST['checked_id']) && !empty($_POST['table_name'])) {
+    if (!empty($_POST['checkedIds']) && !empty($_POST['tableName'])) {
 
         //Store id in variable
-        $idStr = $_POST['checked_id'];
+        $idStr = $_POST['checkedIds'];
 
         //Get the action
         $isActive = $_POST['action'];
@@ -24,7 +24,7 @@ if (isset($_POST['bulk_edit_submit'])) {
             $isActive = 0;
         }
 
-        $tablename = $_POST['table_name'];
+        $tablename = $_POST['tableName'];
         if ($tablename == "categories") {
             $update = $obj->update(
                 $tablename,
@@ -35,7 +35,9 @@ if (isset($_POST['bulk_edit_submit'])) {
                 $idStr
             );
             if ($update) {
-                header("location: " . $cat . "?updated=updated");
+                echo 1;
+            } else {
+                echo 0;
             }
         }
         if ($tablename == "products") {
@@ -48,48 +50,11 @@ if (isset($_POST['bulk_edit_submit'])) {
                 $idStr
             );
             if ($update) {
-                header("location: " . $product . "?updated=updated");
+                echo 1;
+            } else {
+                echo 0;
             }
         }
-        //Pass data to function
-
-
-        // // echo '<pre>';
-        // // print_r($_POST);
-        // // echo '</pre>';
-        // $isActive = $_POST['action'];
-        // // echo $isActive;
-        // // echo "<br>";
-
-        // if ($isActive === 'activate') {
-        //     // echo "true";
-        //     $isActive = 1;
-        // } else {
-        //     // echo "false";
-        //     $isActive = 0;
-        // }
-
-        // // Get all selected IDs
-        // // $selectedIds = explode(',', $_POST['checked_id']);
-        // $idStr = implode(',', $_POST['checked_id']);
-
-        // // Print out t  he IDs for demonstration
-        // // echo "Selected IDs: ";
-        // // foreach ($selectedIds as $id) {
-        // //     echo $id . " ";
-        // // }
-
-        // $obj->update(
-        //     "categories",
-        //     [
-        //         "is_active" => $isActive,
-        //     ],
-        //     "category_id",
-        //     $idStr
-        // );
-        // echo '<pre>';
-        // print_r($obj->getResult());
-        // echo '</pre>';
     } else {
         echo "No ID is selected";
     }

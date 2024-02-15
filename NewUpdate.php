@@ -59,51 +59,13 @@ if (isset($_POST['submit'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Product</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        form {
-            width: 50%;
-            /* Adjust the width as needed */
-            margin: auto;
-            /* Center the form horizontally */
-            margin-bottom: 20px;
-        }
-
-        form input[type="text"],
-        form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        form select {
-            height: 40px;
-        }
-
-        form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        form button:hover {
-            background-color: #45a049;
-        }
-    </style>
 </head>
 
 <body>
     <div class="main">
 
 
-        <form action="" method="post" enctype="multipart/form-data" id="productForm">
+        <form action="" method="post" enctype="multipart/form-data" class="custom-form" id="productForm">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
 
             Product Name: <input type="text" name="title" value="<?php echo $selectedProduct[0]['title']; ?>" required><br><br>
@@ -136,42 +98,6 @@ if (isset($_POST['submit'])) {
         <div class="err" id="errorMessage" style="color: red; display: none;">You can't save the product without selecting a category.</div>
 
     </div>
-    <script>
-        $(document).ready(function() {
-            // Populate subcategories based on selected category
-            $('#categoryID').change(function() {
-                var categoryId = $(this).val();
-                $.ajax({
-                    url: './php-files/get_subcategories.php',
-                    type: 'post',
-                    data: {
-                        categoryId: categoryId
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        var options = '<option value="">Select Subcategory</option>';
-                        for (var i = 0; i < response.length; i++) {
-                            options += '<option value="' + response[i].category_id + '">' + response[i].title + '</option>';
-                        }
-                        $('#subcategoryID').html(options);
-                    }
-                });
-            });
-
-            // Form submission validation
-            $('#productForm').submit(function(event) {
-                console.log("Form submitted");
-                var selectedCategory = $('#categoryID').val();
-                console.log("Selected Category:", selectedCategory);
-                if (selectedCategory === 'NULL') {
-                    $('#errorMessage').show();
-                    console.log("Error message displayed"); // error message is displayed
-                    event.preventDefault(); // Prevent form submission
-                }
-            });
-
-        });
-    </script>
 </body>
 
 </html>

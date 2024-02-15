@@ -50,51 +50,13 @@ if (isset($_POST['submit'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update Category</title>
-    <style>
-        form {
-            width: 50%;
-            /* Adjust the width as needed */
-            margin: auto;
-            /* Center the form horizontally */
-            margin-bottom: 20px;
-        }
-
-        form input[type="text"],
-        form select {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-
-        form select {
-            height: 40px;
-        }
-
-        form button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4caf50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        form button:hover {
-            background-color: #45a049;
-        }
-    </style>
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 
 <body>
     <div class="main">
 
-
-        <form action="" method="POST">
+        <form action="" method="POST" class="custom-form">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
 
 

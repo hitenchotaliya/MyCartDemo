@@ -1,4 +1,5 @@
 <?php
+include './header.php';
 include './php-files/config.php';
 if (!session_id()) {
     session_start();
@@ -17,16 +18,13 @@ $name = $_SESSION['admin_name'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 
 <body>
-    <h1>Welcome <?php echo $name; ?></h1>
-
-    <ul>
-        <li><a href="categories.php">Category</a></li>
-        <li><a href="product.php">Product</a></li>
-    </ul>
-    <button><a href="./php-files/logout.php">Logout</a></button>
+    <div class="main">
+        <h1>Welcome <?php echo $name; ?></h1>
+    </div>
 </body>
 
 </html>

@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
                 exit;
             } else {
                 // Passwords do not match
-                echo json_encode(array("error" => "Username and password do not match"));
+                echo json_encode(array("error" => "Username and password <br> do not match"));
                 exit;
             }
         } else {
@@ -56,7 +56,7 @@ if (isset($_POST['submit'])) {
     <style>
         body,
         html {
-            background: #45a049;
+            background: #DBE2EF;
             margin: 0;
             padding: 0;
             height: 100%;
@@ -99,7 +99,7 @@ if (isset($_POST['submit'])) {
         .login-form button {
             width: 100%;
             padding: 10px;
-            background-color: #4caf50;
+            background-color: #3F72AF;
             color: white;
             border: none;
             border-radius: 5px;
@@ -108,7 +108,7 @@ if (isset($_POST['submit'])) {
         }
 
         .login-form button:hover {
-            background-color: #45a049;
+            background-color: #315a8b;
         }
 
         .err {

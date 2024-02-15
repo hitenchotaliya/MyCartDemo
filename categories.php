@@ -35,6 +35,9 @@
         }
     }
 
+    if (isset($_GET['search'])) {
+        $svalue = $_GET['search'];
+    }
     // Check if a search query is present
     if (isset($_GET['search']) && $_GET['search'] !== '') {
         $search = $obj->escapeString($_GET['search']);
@@ -91,20 +94,31 @@
             $html .= '<td>';
             $html .= '<form method="POST" action="update.php">';
             $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            $html .= '<input type="submit" value="Update">';
+            // $html .= '<input type="submit" value="Update">';
+            $html .= '<button type="submit" class="update-btn"><i class="fa-regular fa-pen-to-square"></i></button>';
             $html .= '</form>';
             $html .= '</td>';
             $html .= '<td>';
-            $html .= '<form method="POST" action="./php-files/delete.php">';
-            $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            $html .= '<input  class="deleted_confirm" type="submit" value="Remove">';
-            $html .= '</form>';
+            // $html .= '<form method="POST" action="./php-files/delete.php">';
+            // $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
+            // $html .= '<input  class="deleted_confirm" type="submit" value="Remove"> ';
+            $html .= '<button class="deleted_confirm delete-btn" data-id="' . $category["category_id"] . '">
+            <i class="fa fa-trash"></i>
+        </button>';
+
+
+            // $html .= '</form>';
             $html .= '</td>';
             $html .= '<td>';
-            $html .= '<form method="POST" action="./php-files/change.php">';
+            // $html .= '<form method="POST" action="./php-files/change.php">';
+            // $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
+            // $html .= '<input class="active_confirm input-switch" type="checkbox" id="toggle_' . $category['category_id'] . '" name="toggle" onchange="this.form.submit()" ' . ($isInActive == "Active" ? "checked" : "") . '>';
+            // $html .= '<label class="label-switch" for="toggle_' . $category['category_id'] . '"></label>';
+            // $html .= '</form>';
             $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            $html .= '<input type="submit" value="' . $isInActive . '">';
-            $html .= '</form>';
+            $html .= '<input class="active_confirm input-switch" type="checkbox" id="toggle_' . $category['category_id'] . '" name="toggle" ' . ($isInActive == "Active" ? "checked" : "") . '>';
+            $html .= '<label class="label-switch" for="toggle_' . $category['category_id'] . '"></label>';
+
             $html .= '</td>';
             $html .= '</tr>';
         }
@@ -113,14 +127,13 @@
     }
     ?>
 
+    <head>
+        <link rel="stylesheet" href="./css/main.css">
+        <link rel="stylesheet" href="./css/table-sort.css">
+        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" /> -->
+    </head>
 
     <body>
-
-
-        <!-- <div id="search-bar">
-            <label>Search</label>
-            <input type="text" id="search" autocomplete="off">
-        </div><br> -->
 
         <div class="main">
             <h1>Categories</h1>
@@ -128,14 +141,17 @@
             <div class="col-md-7">
                 <form action="categories.php" method="GET">
                     <div class="input-group search">
-                        <input type="text" name="search" placeholder="Search for...">
+                        <input type="text" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
+                                                                                                echo $svalue;
+                                                                                            } ?>">
                         <span>
                             <input type="submit" value="Search" />
                         </span>
+
                     </div>
                 </form>
             </div>
-            <div id="table-data">
+            <div id="table-data" class="table-sortable">
                 <table border="1">
                     <thead>
                         <tr>
@@ -157,17 +173,16 @@
                     </tbody>
                 </table>
                 <br>
-                <!-- Add this dropdown to your form -->
-                <div class="delete">
-                    <?php
-                    if (isset($_GET['success']) && $_GET['success'] === 'deleted') {
-                        echo "Records deleted successfully!";
-                    } else if (isset($_GET['updated']) && $_GET['updated'] === 'updated') {
-                        echo "Records Updated successfully!";
-                    }
-                    ?>
+            </div>
+            <div class="delete">
+                <?php
+                if (isset($_GET['success']) && $_GET['success'] === 'deleted') {
+                    echo "Records deleted successfully!";
+                } else if (isset($_GET['updated']) && $_GET['updated'] === 'updated') {
+                    echo "Records Updated successfully!";
+                }
+                ?>
 
-                </div>
             </div>
             <div class="error">
                 <?php
@@ -178,18 +193,20 @@
             </div>
 
             <div class="status">
-                <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('categories');">
+                <!-- <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('categories');">
                     <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete" />
-                </form>
+                </form> -->
+                <button type="button" class="btn delete-btn" onclick="delete_confirm('categories')"><i class="fa fa-trash"></i></button>
 
-                <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('categories');">
-                    <label>Status: </label>
-                    <select id="action" name="action">
-                        <option value="activate">Activate</option>
-                        <option value="deactivate">Deactivate</option>
-                    </select>
-                    <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" />
-                </form>
+
+                <!-- <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('categories');"> -->
+                <label>Status: </label>
+                <select id="action" name="action">
+                    <option value="activate">Activate</option>
+                    <option value="deactivate">Deactivate</option>
+                </select>
+                <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" onclick="status_confirm('categories')" />
+                <!-- </form> -->
             </div>
 
 
@@ -259,72 +276,7 @@
             </div>
         </div>
 
-        <script>
-            function status_confirm(tableName) {
-                // Collect all the selected checkboxes
-                var selectedIds = [];
-                $('.checkbox:checked').each(function() {
-                    selectedIds.push($(this).val());
-                });
-
-                // Check if any checkboxes are selected
-                if (selectedIds.length > 0) {
-                    // Append the selected IDs and table name to the form data
-                    $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-                    $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
-
-                    // Ask for confirmation
-                    var result = confirm("Are you sure to change status of selected items?");
-                    if (result) {
-                        return true; // Proceed with the action
-                    } else {
-                        return false; // Cancel the action
-                    }
-                } else {
-                    // No checkboxes selected, show an alert
-                    alert('Select at least 1 record to change status.');
-                    return false; // Cancel the action
-                }
-            }
-
-            function delete_confirm(tableName) {
-                // Collect all the selected checkboxes
-                var selectedIds = [];
-                $('.checkbox:checked').each(function() {
-                    selectedIds.push($(this).val());
-                });
-
-                if (selectedIds.length > 0) {
-                    // Append the selected IDs and table name to the form data
-                    $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-                    $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
-
-                    // Ask for confirmation
-                    var result = confirm("Are you sure you want to delete the selected item(s)?");
-                    if (result) {
-                        return true; // Proceed with the action
-                    } else {
-                        return false; // Cancel the action
-                    }
-                } else {
-                    alert('Select at least 1 record to delete.');
-                    return false;
-                }
-            }
-
-            // $(document).ready(function() {
-            //     $('.deleted_confirm').on('click', function(e) {
-            //         // Prevent the default form submission
-            //         e.preventDefault();
-
-            //         // Confirm deletion
-            //         var confirmation = confirm("Are you sure you want to delete this record?");
-
-            //         // If user confirms deletion, submit the form
-            //         if (confirmation) {
-            //             $(this).closest('form').submit();
-            //         }
-            //     });
-            // })
-        </script>
+        <!-- 
+        <script src="./js/table-sort.js"></script>
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
     </body>
