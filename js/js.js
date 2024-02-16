@@ -415,7 +415,7 @@ $(document).ready(function () {
         });
     });
     // Form submission validation
-    $('#productForm').submit(function (event) {
+    $('.productForm').submit(function (event) {
         console.log("Form submitted");
         var selectedCategory = $('#categoryID').val();
         console.log("Selected Category:", selectedCategory);
@@ -480,6 +480,114 @@ $(document).ready(function () {
             $('input[type="submit"]').prop('disabled', false);
         }
     });
+
+    $('#productFormInsert input, #productFormInsert select').on('input change', function () {
+        var fieldName = $(this).attr('name');
+        var fieldValue = $(this).val().trim();
+        var errorMessage = '';
+
+        switch (fieldName) {
+            case 'title':
+                errorMessage = fieldValue === '' ? 'Please enter a valid title.' : '';
+                $('#title-error').text(errorMessage);
+                break;
+            case 'description':
+                errorMessage = fieldValue === '' ? 'Please enter a valid description.' : '';
+                $('#description-error').text(errorMessage);
+                break;
+            case 'is_active':
+                errorMessage = fieldValue === '' ? 'Please select an option for active status.' : '';
+                $('#is_active-error').text(errorMessage);
+                break;
+            case 'categoryID':
+                errorMessage = fieldValue === '' ? 'Please select a category.' : '';
+                $('#categoryID-error').text(errorMessage);
+                break;
+        }
+
+        // Validate file input separately
+        if (fieldName === 'doc') {
+            var fileCount = $('#doc')[0].files.length;
+            errorMessage = fileCount === 0 ? 'Please select at least one image.' : '';
+            $('#doc-error').text(errorMessage);
+        }
+
+        // Check if any error message exists
+        var hasError = $('.error-message').filter(function () {
+            return $(this).text().trim() !== '';
+        }).length > 0;
+
+        // Enable/disable submit button based on error messages
+        $('button[type="submit"]').prop('disabled', hasError).css('background-color', hasError ? 'grey' : '');
+    });
+
+
+    $('input[name="categoryname"]').on('input', function () {
+        // Get the category name from the input field
+        var categoryName = $(this).val().trim().toLowerCase();
+
+        // Reset error message
+        $('#title-error').text('');
+
+        // Check if the category name is less than 3 characters
+        if (categoryName.length < 3) {
+            $('#title-error').text('Category name must be at least 3 characters.');
+            $('button[type="submit"]').prop('disabled', true);
+        } else {
+            $('#title-error').text(''); // Clear error message if category name is valid
+        }
+
+        // Get the list of existing category names from the select element
+        var existingCategories = [];
+        $('#parentCategoryID option').each(function () {
+            existingCategories.push($(this).text().trim().toLowerCase());
+        });
+
+        // Check if the entered category name already exists
+        if (existingCategories.includes(categoryName)) {
+            $('#title-error').text('Category name already exists.');
+            $('button[type="submit"]').prop('disabled', true);
+        }
+
+        // Enable/disable submit button based on error messages
+        var hasError = $('#title-error').text().trim() !== '';
+        $('button[type="submit"]').prop('disabled', hasError);
+
+        // Change button background color based on error status
+        $('button[type="submit"]').css('background-color', hasError ? 'grey' : '');
+
+    });
+    $('#categoryForm').on('submit', function (e) {
+        var selectedSubcategory = $("#parentCategoryID").val();
+        if (selectedSubcategory === '') {
+            e.preventDefault(); // Prevent default form submission
+
+            // If no subcategory is selected, show a SweetAlert message
+            swal({
+                title: 'No sub-category selected.',
+                text: 'This will be treated as a parent category.',
+                icon: 'warning',
+                buttons: {
+                    confirm: {
+                        text: 'OK',
+                        value: true,
+                        visible: true,
+                        className: 'btn-primary',
+                        closeModal: true
+                    },
+                    cancel: 'Cancel' // Add cancel button
+                }
+            }).then((value) => {
+                // Proceed with form submission only after the user clicks "OK"
+                if (value) {
+                    // Submit the form
+                    $("#categoryForm").off('submit').submit();
+                }
+            });
+        }
+    });
+
+
 
 
     console.log("Document ready, delete confirmation script running...");

@@ -56,20 +56,22 @@ if (isset($_POST['submit'])) {
 <body>
     <div class="main">
 
-        <form action="" method="POST" class="custom-form">
+        <form action="" method="POST" class="custom-form" id="categoryForm">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
 
+            CategoryName: <input type="text" name="categoryname" value="<?php echo $selectedCategory[0]['title']; ?>">
+            <span class="error-message" id="title-error"></span><br>
 
-            CategoryName: <input type="text" name="categoryname" value="<?php echo $selectedCategory[0]['title']; ?>"><br><br>
+
             is_active :
             <select name="is_active" id="">
                 <option value="1" <?php echo ($selectedCategory[0]['is_active'] == 1) ? 'selected' : ''; ?>>Active</option>
                 <option value="0" <?php echo ($selectedCategory[0]['is_active'] == 0) ? 'selected' : ''; ?>>InActive</option>
-            </select><br><br>
+            </select>
 
             <!-- Drop-down for parent category with default value -->
-
-            <select name="parentCategoryID" id="">
+            Sub-category:
+            <select name="parentCategoryID" id="parentCategoryID">
                 <option value="NULL">None</option>
                 <?php
                 foreach ($allCategories as $category) {

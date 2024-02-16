@@ -65,16 +65,21 @@ if (isset($_POST['submit'])) {
     <div class="main">
 
 
-        <form action="" method="post" enctype="multipart/form-data" class="custom-form" id="productForm">
+        <form action="" method="post" enctype="multipart/form-data" class="custom-form productForm" id="productFormInsert">
             <input type="hidden" name="id" value="<?php echo $id; ?>">
 
             Product Name: <input type="text" name="title" value="<?php echo $selectedProduct[0]['title']; ?>" required><br><br>
+            <span class="error-message" id="title-error"></span><br>
+
             Product Description: <input type="text" name="description" value="<?php echo $selectedProduct[0]['description']; ?>" required><br><br>
+            <span class="error-message" id="description-error"></span><br>
+
             is_active :
             <select name="is_active" id="">
                 <option value="1" <?php echo ($selectedProduct[0]['is_active'] == 1) ? 'selected' : ''; ?>>Active</option>
                 <option value="0" <?php echo ($selectedProduct[0]['is_active'] == 0) ? 'selected' : ''; ?>>InActive</option>
             </select><br><br>
+            <span class="error-message" id="is_active-error"></span><br>
 
             Categories:
             <select name="categoryID" id="categoryID" required>
@@ -88,11 +93,14 @@ if (isset($_POST['submit'])) {
                 }
                 ?>
             </select><br><br>
+            <span class="error-message" id="categoryID-error"></span><br>
 
             Subcategory:
             <select name="subcategoryID" id="subcategoryID">
                 <!-- Options will be populated dynamically -->
-            </select>
+            </select><br>
+            <span class="error-message" id="subcategoryID-error"></span><br>
+
             <button type="submit" name="submit">Submit</button>
         </form>
         <div class="err" id="errorMessage" style="color: red; display: none;">You can't save the product without selecting a category.</div>

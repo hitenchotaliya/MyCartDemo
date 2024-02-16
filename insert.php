@@ -58,15 +58,19 @@ $Categories = $obj->getResult();
 
 <body>
     <div class="main">
-        <form action="" method="POST" class="custom-form">
+        <form action="" method="POST" class="custom-form" id="categoryForm">
+            CategoryName: <input type="text" name="categoryname" required>
+            <span class="error-message" id="title-error"></span><br>
 
-            CategoryName: <input type="text" name="categoryname" required><br><br>
-            is_active : <select name="is_active" id="" required>
+            is_active :
+            <select name="is_active" id="" required>
                 <option value="1">Active</option>
                 <option value="0">InActive</option>
-            </select><br><br>
-            <select name="parentCategoryID" id="">
-                <option value="">Select Parent Category</option> <!-- Add this option for null parent category -->
+            </select>
+
+            Sub-category:
+            <select name="parentCategoryID" id="parentCategoryID">
+                <option value="">Select Parent Category</option>
                 <?php
                 foreach ($Categories as $category) {
                     $categoryId = $category["category_id"];
@@ -76,8 +80,8 @@ $Categories = $obj->getResult();
                 ?>
             </select>
             <br><br>
-            <button type="submit" name="submit">Submit</button>
 
+            <button type="submit" name="submit">Submit</button>
         </form>
     </div>
 </body>

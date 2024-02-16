@@ -95,16 +95,21 @@ $result = $obj->getResult();
 
 <body>
     <div class="main">
-        <form action="" method="post" enctype="multipart/form-data" class="custom-form">
-            Product Name: <input type="text" name="title" required><br><br>
-            Product Description: <input type="text" name="description" required><br><br>
+        <form action="" method="post" enctype="multipart/form-data" class="custom-form" id="productFormInsert">
+            Product Name: <input type="text" name="title" id="title" required><br>
+            <span class="error-message" id="title-error"></span><br>
+            Product Description: <input type="text" name="description" id="description" required><br>
+            <span class="error-message" id="description-error"></span><br>
             is_active :
-            <select name="is_active" id="">
+            <select name="is_active" id="is_active" required>
+                <option value="">Select</option>
                 <option value="1">Active</option>
                 <option value="0">InActive</option>
-            </select><br><br>
+            </select><br>
+            <span class="error-message" id="is_active-error"></span><br>
             Category:
             <select name="categoryID" id="categoryID" required>
+                <option value="">Select</option>
                 <?php
                 foreach ($Categories as $category) {
                     $categoryId = $category["category_id"];
@@ -112,12 +117,15 @@ $result = $obj->getResult();
                     echo "<option value='$categoryId'>$categoryName</option>";
                 }
                 ?>
-            </select><br><br>
+            </select><br>
+            <span class="error-message" id="categoryID-error"></span><br>
             Subcategory:
             <select name="subcategoryID" id="subcategoryID">
                 <!-- Subcategory options will be populated dynamically -->
-            </select><br><br>
-            Images: <input type="file" name="doc[]" multiple />
+            </select><br>
+            <span class="error-message" id="subcategoryID-error"></span><br>
+            Images: <input type="file" name="doc[]" id="doc" multiple required />
+            <span class="error-message" id="doc-error"></span><br>
             <button type="submit" name="submit">Submit</button>
         </form>
     </div>
