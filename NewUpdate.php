@@ -102,6 +102,7 @@ if (isset($_POST['submit'])) {
             <span class="error-message" id="subcategoryID-error"></span><br>
 
             <button type="submit" name="submit">Submit</button>
+            <button class="back-btn" style="margin-top: 10px; background-color: #3F72AF;"><a href="product.php">Back</a></button>
         </form>
         <div class="err" id="errorMessage" style="color: red; display: none;">You can't save the product without selecting a category.</div>
 
