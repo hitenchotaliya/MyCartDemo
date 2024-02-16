@@ -41,28 +41,12 @@ $imagePaths = explode(',', $imagePathsString);
     <style>
         .detailmain {
             display: flex;
-            justify-content: space-between;
-        }
-
-        .sideimage {
-            flex: 0 0 30%;
-            max-width: 30%;
-        }
-
-        .sideimage .image-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            grid-gap: 10px;
-        }
-
-        .sideimage img {
-            width: 100%;
-            height: auto;
-            border: 1px solid #ddd;
-            border-radius: 5px;
+            justify-content: space-evenly;
+            align-items: center;
         }
 
         .productContent {
+            margin-left: 0;
             flex: 0 0 65%;
             max-width: 65%;
         }
@@ -75,32 +59,114 @@ $imagePaths = explode(',', $imagePathsString);
         .productContent p {
             margin-top: 10px;
         }
+
+        #slider-container {
+            width: 200px;
+            height: auto;
+            overflow: hidden;
+            position: relative;
+            margin-left: 0;
+            margin-right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Center items horizontally */
+        }
+
+        #slider-images {
+            display: flex;
+            align-items: center;
+            /* Center images vertically */
+        }
+
+        .slide {
+            flex: 0 0 100%;
+            display: flex;
+            justify-content: center;
+            /* Center image horizontally */
+            align-items: center;
+            /* Center image vertically */
+        }
+
+        .slide img {
+            max-width: 100%;
+            /* Ensure images don't exceed slide width */
+            max-height: 100%;
+            /* Ensure images don't exceed slide height */
+        }
+
+        #prev,
+        #next {
+            position: absolute;
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+            z-index: 1;
+            /* Ensure buttons are above images */
+        }
+
+        #prev {
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        #next {
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .dots {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            background-color: grey;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        .dot.active {
+            background-color: black;
+        }
     </style>
 </head>
 
 <body>
     <div class="main">
         <div class="detailmain">
-
-            <div class="sideimage">
-                <div class="image-container">
-                    <?php foreach ($imagePaths as $imagePath) : ?>
-                        <img src="<?php echo $imagePath; ?>" alt="Product Image">
+            <div id="slider-container">
+                <div id="slider-images">
+                    <?php foreach ($imagePaths as $index => $imagePath) : ?>
+                        <div class="slide"><img src="<?php echo $imagePath; ?>" alt="Product Image"></div>
+                    <?php endforeach; ?>
+                </div>
+                <div id="prev">&#10094;</div>
+                <div id="next">&#10095;</div>
+                <div class="dots">
+                    <?php foreach ($imagePaths as $index => $imagePath) : ?>
+                        <span class="dot<?php echo ($index === 0) ? ' active' : ''; ?>"></span>
                     <?php endforeach; ?>
                 </div>
             </div>
-
             <div class="productContent">
                 <h2 class="title"><label for="title">Title:</label><?php echo $title; ?></h2>
                 <p class="description"><label for="Description">Description:</label><?php echo $description; ?></p>
                 <p class="is_active">Is Active: Yes</p>
                 <p class="category"><label for="Category">Category:</label><?php echo $category; ?></p>
                 <div class="sort">
-
                     <form action="product.php" method="POST">
                         <button>Back</button>
                     </form>
-
                     <form method="POST" action="NewUpdate.php">
                         <input type="hidden" name="id" value="<?php echo $id; ?>">
                         <button type="submit">Edit</button>
@@ -109,12 +175,48 @@ $imagePaths = explode(',', $imagePathsString);
                         <input type="hidden" name="id" value="<?php echo $id; ?>">
                         <button type="submit">Images</button>
                     </form>
-
                 </div>
             </div>
-
         </div>
+    </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            const $sliderImages = $('#slider-images');
+            const $slides = $('.slide');
+            const $dots = $('.dot');
+            const $prevBtn = $('#prev');
+            const $nextBtn = $('#next');
+            let currentIndex = 0;
+
+            function goToSlide(index) {
+                $sliderImages.css('transform', `translateX(-${index * 100}%)`);
+                $dots.removeClass('active');
+                $dots.eq(index).addClass('active');
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex === 0) ? $slides.length - 1 : currentIndex - 1;
+                goToSlide(currentIndex);
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex === $slides.length - 1) ? 0 : currentIndex + 1;
+                goToSlide(currentIndex);
+            }
+
+            $prevBtn.click(prevSlide);
+            $nextBtn.click(nextSlide);
+
+            $dots.each(function(index) {
+                $(this).click(function() {
+                    currentIndex = index;
+                    goToSlide(currentIndex);
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Image Slider with jQuery</title>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        #slider-container {
+            width: 400px;
+            height: 300px;
+            overflow: hidden;
+            position: relative;
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        #slider-images {
+            width: 100%;
+            height: 100%;
+            display: flex;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+        }
+
+        #prev,
+        #next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        #prev {
+            left: 10px;
+        }
+
+        #next {
+            right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="slider-container">
+        <div id="slider-images">
+            <div class="slide"><img src="https://via.placeholder.com/400x300?text=Image+1" alt="Image 1"></div>
+            <div class="slide"><img src="https://via.placeholder.com/400x300?text=Image+2" alt="Image 2"></div>
+            <div class="slide"><img src="https://via.placeholder.com/400x300?text=Image+3" alt="Image 3"></div>
+        </div>
+        <div id="prev">&#10094;</div>
+        <div id="next">&#10095;</div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            const $sliderImages = $('#slider-images');
+            const $slides = $('.slide');
+            const $prevBtn = $('#prev');
+            const $nextBtn = $('#next');
+            let currentIndex = 0;
+
+            function goToSlide(index) {
+                $sliderImages.css('transform', `translateX(-${index * 100}%)`);
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex === 0) ? $slides.length - 1 : currentIndex - 1;
+                goToSlide(currentIndex);
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex === $slides.length - 1) ? 0 : currentIndex + 1;
+                goToSlide(currentIndex);
+            }
+
+            $prevBtn.click(prevSlide);
+            $nextBtn.click(nextSlide);
+        });
+    </script>
+
+</body>
+
+</html>
