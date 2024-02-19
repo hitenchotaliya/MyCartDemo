@@ -3,47 +3,71 @@ include 'config.php';
 
 $obj = new Database();
 
-// For Category 
 $id = isset($_POST['id']) ? $_POST['id'] : null;
-
-// For productDelete
 $productId = isset($_POST['product_id']) ? $_POST['product_id'] : null;
-
-// For image delete
 $imageId = isset($_POST['image_id']) ? $_POST['image_id'] : null;
-$pid = isset($_POST['product_id']) ? $_POST['product_id'] : null;
 
 if (isset($id)) {
-    if ($obj->delete("categories", "category_id=$id")) {
-        // header("location: " . $cat);
-        echo 1;
+    // Check if there are any sub-categories associated with this category
+    $obj->select('categories', '*', null, "parent_category_id = '$id'", null, 0);
+    $subCategories = $obj->getResult();
+
+    // Check if there are any products associated with this category
+    $obj->select('products', '*', null, "category_id = '$id'", null, 0);
+    $products = $obj->getResult();
+
+    // Initialize an array to store the names of related child records
+    $relatedRecords = array();
+
+    // Check if there are any related sub-categories or products
+    if (!empty($subCategories)) {
+        foreach ($subCategories as $subCategory) {
+            $relatedRecords[] = $subCategory['title'];
+        }
+    }
+
+    if (!empty($products)) {
+        foreach ($products as $product) {
+            $relatedRecords[] = $product['title'];
+        }
+    }
+
+    if (!empty($relatedRecords)) {
+        // If related records exist, return an error message with the names of related records
+        $relatedRecordsNames = implode(", ", $relatedRecords);
+        echo json_encode(array("error" => "You can't delete this category because it has related child records ($relatedRecordsNames). Please delete the related sub-categories and products first."));
     } else {
-        echo 0;
-        // $errorMessage = urlencode("Error deleting category with ID: $id");
-        // header("location: " . $cat . "?error_message=$errorMessage");
+        // If no related records exist, proceed with deleting the category
+        if ($obj->delete("categories", "category_id=$id")) {
+            echo json_encode(array("success" => "Category deleted successfully."));
+        } else {
+            echo json_encode(array("error" => "Error deleting category."));
+        }
     }
 } else if (isset($imageId)) {
     if ($obj->delete("product_images", "image_id = $imageId")) {
-        // $absolutePath = "http://localhost/MyCart/ImageManage.php?id=$pid";
-        // header("Location: $absolutePath");
-        // exit;
-        echo 1;
+        echo json_encode(array("success" => "Category deleted successfully."));
     } else {
-        // $errorMessage = urlencode("Error deleting image with ID: $imageId");
-        // $absolutePath = "http://localhost/MyCart/ImageManage.php?id=$pid&error_message=$errorMessage";
-        // header("Location: $absolutePath");
-        echo 0;
+        echo json_encode(array("error" => "Error deleting category."));
     }
-} else if (isset($productId)) {
-    if ($delete = $obj->delete("products", "product_id=$productId")) {
-        // header("location: " . $product);
-        echo 1;
+} elseif (isset($productId)) {
+    // Check if there are any product images associated with this product
+    $obj->select('product_images', '*', null, "product_id = '$productId'", null, 0);
+    $productImages = $obj->getResult();
+
+    // Check if there are any related product images
+    if (!empty($productImages)) {
+        // If related records exist, return an error message
+        $imageCount = count($productImages);
+        echo json_encode(array("error" => "You can't delete this product because it has $imageCount associated product images. Please delete the product images first."));
     } else {
-        // $errorMessage = urlencode("Error deleting product with ID: $productId");
-        // header("location: " . $product . "?error_message=$errorMessage");
-        echo 0;
+        // If no related records exist, proceed with deleting the product
+        if ($obj->delete("products", "product_id=$productId")) {
+            echo json_encode(array("success" => "Product deleted successfully."));
+        } else {
+            echo json_encode(array("error" => "Error deleting product."));
+        }
     }
 } else {
-    $errorMessage = urlencode("No valid action specified");
-    header("location: " . $product . "?error_message=$errorMessage");
+    echo json_encode(array("error" => "No valid action specified."));
 }

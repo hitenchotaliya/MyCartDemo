@@ -315,40 +315,50 @@ $(document).ready(function () {
             icon: "warning",
             buttons: true,
             dangerMode: true,
-        })
-            .then((willDelete) => {
-                if (willDelete) {
-                    var id = $(this).data("id");
-                    var product_id = $(this).data("product_id");
-                    var image_id = $(this).data("image_id");
+        }).then((willDelete) => {
+            if (willDelete) {
+                var id = $(this).data("id");
+                var product_id = $(this).data("product_id");
+                var image_id = $(this).data("image_id");
 
-                    //console.log("Id is " + id);
-                    //console.log("Id of image " + image_id);
+                var element = this;
 
-                    var element = this;
-                    // console.log($(this));
-                    $.ajax({
-                        url: "php-files/delete.php",
-                        type: "POST",
-                        data: { id: id, product_id: product_id, image_id: image_id },
-                        success: function (data) {
-                            if (data == 1) {
-                                swal("Deleted Successfully!", {
-                                    icon: "success",
-                                }).then(() => {
-                                    $(element).closest("tr").fadeOut();
-                                    $(element).closest(".image-container").fadeOut();
-                                });
-                            } else {
-                                swal("Can't Delete Parent Record", {
-                                    icon: "error",
-                                });
-                            }
+                $.ajax({
+                    url: "php-files/delete.php",
+                    type: "POST",
+                    data: { id: id, product_id: product_id, image_id: image_id },
+                    success: function (response) {
+                        // Parse JSON response
+                        var data = JSON.parse(response);
+                        // console.log(data);
+                        if (data.hasOwnProperty('success')) {
+                            swal("Deleted Successfully!", {
+                                icon: "success",
+                            }).then(() => {
+                                // Remove closest table row if applicable
+                                $(element).closest("tr").fadeOut();
+                                // Remove closest image container if applicable
+                                $(element).closest(".image-container").fadeOut();
+                            });
+                        } else if (data.hasOwnProperty('error')) {
+                            // Display error message
+                            swal(data.error, {
+                                icon: "error",
+                            });
+                        } else {
+                            // Unexpected response
+                            swal("Error", "Unexpected response from server", "error");
                         }
-                    });
-                }
-            });
+                    },
+                    error: function () {
+                        // AJAX request failed
+                        swal("Error", "AJAX request failed", "error");
+                    }
+                });
+            }
+        });
     });
+
 
 
     $(document).on("change", ".active_confirm", function () {
