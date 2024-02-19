@@ -12,10 +12,19 @@ function sortTableByColumn(table, column, asc = true) {
 
     // Sort each row
     const sortedRows = rows.sort((a, b) => {
-        const aColText = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
-        const bColText = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+        let aValue = a.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
+        let bValue = b.querySelector(`td:nth-child(${column + 1})`).textContent.trim();
 
-        return aColText > bColText ? (1 * dirModifier) : (-1 * dirModifier);
+        // Parse values as numbers if they are numeric
+        if (!isNaN(parseFloat(aValue)) && isFinite(aValue)) {
+            aValue = parseFloat(aValue);
+        }
+        if (!isNaN(parseFloat(bValue)) && isFinite(bValue)) {
+            bValue = parseFloat(bValue);
+        }
+
+        // Compare values
+        return aValue > bValue ? (1 * dirModifier) : (-1 * dirModifier);
     });
 
     // Remove all existing TRs from the table
@@ -31,6 +40,7 @@ function sortTableByColumn(table, column, asc = true) {
     table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-asc", asc);
     table.querySelector(`th:nth-child(${column + 1})`).classList.toggle("th-sort-desc", !asc);
 }
+
 
 document.querySelectorAll(".table-sortable th").forEach(headerCell => {
     headerCell.addEventListener("click", () => {

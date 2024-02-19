@@ -277,7 +277,7 @@
             </div>
         </div>
 
-        <!-- 
+
         <script src="./js/table-sort.js"></script>
-        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> -->
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     </body>

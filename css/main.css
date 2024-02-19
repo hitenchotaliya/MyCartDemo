@@ -522,4 +522,18 @@ table .status-inactive {
     display: inline-block;
 }
 
+.image-container-display {
+    text-align: center;
+}
+
+#imageDisplay img {
+    max-width: 200px;
+    max-height: 200px;
+    display: inline-block;
+    vertical-align: middle;
+
+}
+
+
+
 /* Image slider */
