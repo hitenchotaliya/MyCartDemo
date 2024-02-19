@@ -164,7 +164,7 @@ $imagePaths = explode(',', $imagePathsString);
                 <p class="is_active">Is Active: Yes</p>
                 <p class="category"><label for="Category">Category:</label><?php echo $category; ?></p>
                 <div class="sort">
-                    <form action="product.php" method="POST">
+                    <form action="product.php">
                         <button>Back</button>
                     </form>
                     <form method="POST" action="NewUpdate.php">

@@ -198,8 +198,8 @@ $(document).ready(function () {
 
         var username = $("#username").val();
         var password = $("#password").val();
-        console.log(username);
-        console.log(password);
+        // console.log(username);
+        //console.log(password);
 
         // Validate and show errors
         if (username.trim() === "") {
@@ -227,7 +227,7 @@ $(document).ready(function () {
                                 window.location = URL + 'dashboard.php';
                             }, 1000);
                         } else if (res.hasOwnProperty('error')) {
-                            $("#adminLogin").prepend("<div class='alert alert-danger'>" + res.error + "</div>");
+                            $("#errorUP").prepend("<div class='alert alert-danger'>" + res.error + "</div>");
                         } else {
                             console.error("Unexpected response:", res);
                         }

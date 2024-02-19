@@ -32,7 +32,7 @@ if (isset($_POST['submit'])) {
                 exit;
             } else {
                 // Passwords do not match
-                echo json_encode(array("error" => "Username and password <br> do not match"));
+                echo json_encode(array("error" => "<br>Username and password do not match"));
                 exit;
             }
         } else {
@@ -76,6 +76,8 @@ if (isset($_POST['submit'])) {
             border: 1px solid #ccc;
             border-radius: 5px;
             background-color: #f9f9f9;
+            height: 300px;
+            width: 250px;
         }
 
         .login-form h2 {
@@ -131,8 +133,10 @@ if (isset($_POST['submit'])) {
             <div class="err" id="passwordError"></div>
 
             <button type="submit">Submit</button>
+            <div class="error" id="errorUP" style="color: red;"></div>
         </form>
     </div>
+
     <script src="./js/js.js"></script>
 </body>
 
