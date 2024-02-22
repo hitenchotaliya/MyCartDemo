@@ -2,8 +2,10 @@
 
 include './header.php';
 include './php-files/config.php';
+include './class/product.php';
 
 $obj = new Database();
+$productClass = new product($obj);
 
 $setLimit = 5;
 $page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -72,15 +74,16 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
     );
     $result = $obj->getResult();
 } else {
-    $obj->select(
-        "products",
-        "DISTINCT products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path, product_images.is_primary",
-        "categories LEFT JOIN product_images ON products.product_id = product_images.product_id  AND product_images.is_primary = 1", // Consider only primary images
-        "categories.is_active = 1 AND categories.category_id = products.category_id",
-        null,
-        $setLimit,
-    );
-    $result = $obj->getResult();
+    // $obj->select(
+    //     "products",
+    //     "DISTINCT products.product_id, products.title, products.description, products.is_active, products.category_id, categories.title AS category_title, product_images.image_path, product_images.is_primary",
+    //     "categories LEFT JOIN product_images ON products.product_id = product_images.product_id  AND product_images.is_primary = 1", // Consider only primary images
+    //     "categories.is_active = 1 AND categories.category_id = products.category_id",
+    //     null,
+    //     $setLimit,
+    // );
+    // $result = $obj->getResult();
+    $result = $productClass->getAllProducts($page, $setLimit);
 }
 
 
@@ -146,7 +149,7 @@ function ShowProduct($result)
         $html .= '<td>';
         $html .= '<form class="record-custom-form" method="POST" action="ImageManage.php">';
         $html .= '<input type="hidden" name="id" value="' . $productId . '">';
-        $html .= '<input type="submit" value="Manage Image">';
+        $html .= '<input type="submit" value="Images">';
         $html .= '</form>';
         $html .= '</td>';
         $html .= '<td>';
