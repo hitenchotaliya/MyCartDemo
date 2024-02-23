@@ -1,7 +1,9 @@
     <?php
     include './php-files/config.php';
     include './header.php';
+    include './class/category.php';
     $obj = new Database();
+    $categoriesClass = new category($obj);
 
     // Setting limit of page record
     $setLimit = 10;
@@ -40,23 +42,17 @@
     }
     // Check if a search query is present
     if (isset($_GET['search']) && $_GET['search'] !== '') {
-        $search = $obj->escapeString($_GET['search']);
-        $obj->sql("SELECT * FROM categories WHERE `title` LIKE '%$search%' ");
-        $categories = $obj->getResult();
+        $categories = $categoriesClass->searchCategories($_GET['search']);
     } else if (isset($_GET['sort']) && $_GET['sort'] !== '') {
-        $obj->select("categories", "*", null, null, $orderby, $setLimit);
-        $categories = $obj->getResult();
+        $categories = $categoriesClass->sortCategories($orderby, $setLimit);
     } else if (isset($_GET['dsort']) && $_GET['dsort'] !== '') {
-        $obj->select("categories", "*", null, null, $datesort, $setLimit);
-        $categories = $obj->getResult();
+        $categories = $categoriesClass->sortCategoriesByDate($datesort, $setLimit);
     } else if (isset($_GET['activestatus']) && $_GET['activestatus'] !== '') {
-        $obj->select("categories", "*", null, $activecategory, null, $setLimit);
-        $categories = $obj->getResult();
+        $categories = $categoriesClass->getActiveCategories($activecategory, $setLimit);
     } else {
-        // No search query, retrieve all categories
-        $obj->select("categories", "*", null, null, $orderby, $setLimit);
-        $categories = $obj->getResult();
+        $categories = $categoriesClass->getAllCategories($page, $setLimit);
     }
+
 
     function buildTree($categories)
     {
@@ -85,8 +81,6 @@
             $html .= '<tr>';
             $html .= '<td><input type="checkbox" name="checked_id[]" class="checkbox" value="' . $category['category_id'] . '" /></td>';
             $html .= '<td>' . $rowNumber++ . '</td>';
-            // $html .= '<td>' . $category['category_id'] . '</td>';
-            // $html .= '<td>' . $category['parent_category_id'] . '</td>';
             $html .= '<td>' . $category['title'] . '</td>';
             $html .= '<td>' . $isActive . '</td>';
             $html .= '<td>' . $date_added . '</td>';
@@ -94,27 +88,15 @@
             $html .= '<td>';
             $html .= '<form method="POST" action="update.php">';
             $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            // $html .= '<input type="submit" value="Update">';
             $html .= '<button type="submit" class="update-btn"><i class="fa-regular fa-pen-to-square"></i></button>';
             $html .= '</form>';
             $html .= '</td>';
             $html .= '<td>';
-            // $html .= '<form method="POST" action="./php-files/delete.php">';
-            // $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            // $html .= '<input  class="deleted_confirm" type="submit" value="Remove"> ';
             $html .= '<button class="deleted_confirm delete-btn" data-id="' . $category["category_id"] . '">
-            <i class="fa fa-trash"></i>
-        </button>';
-
-
-            // $html .= '</form>';
+                         <i class="fa fa-trash"></i>
+                         </button>';
             $html .= '</td>';
             $html .= '<td>';
-            // $html .= '<form method="POST" action="./php-files/change.php">';
-            // $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
-            // $html .= '<input class="active_confirm input-switch" type="checkbox" id="toggle_' . $category['category_id'] . '" name="toggle" onchange="this.form.submit()" ' . ($isInActive == "Active" ? "checked" : "") . '>';
-            // $html .= '<label class="label-switch" for="toggle_' . $category['category_id'] . '"></label>';
-            // $html .= '</form>';
             $html .= '<input type="hidden" name="id" value="' . $category['category_id'] . '">';
             $html .= '<input class="active_confirm input-switch" type="checkbox" id="toggle_' . $category['category_id'] . '" name="toggle" ' . ($isInActive == "Active" ? "checked" : "") . '>';
             $html .= '<label class="label-switch" for="toggle_' . $category['category_id'] . '"></label>';
@@ -194,20 +176,16 @@
             </div>
 
             <div class="status">
-                <!-- <form name="bulk_action_form" action="./php-files/multi-delete.php" method="POST" onSubmit="return delete_confirm('categories');">
-                    <input type="submit" class="btn btn-danger" name="bulk_delete_submit" value="Delete" />
-                </form> -->
+
                 <button type="button" class="btn delete-btn" onclick="delete_confirm('categories')"><i class="fa fa-trash"></i></button>
 
 
-                <!-- <form name="bulk_edit_form" action="./php-files/multi-active.php" method="POST" onSubmit="return status_confirm('categories');"> -->
                 <label>Status: </label>
                 <select id="action" name="action">
                     <option value="activate">Activate</option>
                     <option value="deactivate">Deactivate</option>
                 </select>
                 <input type="submit" class="btn btn-danger" name="bulk_edit_submit" value="Apply" onclick="status_confirm('categories')" />
-                <!-- </form> -->
             </div>
 
 
@@ -244,8 +222,7 @@
                         <option value="l-updated" <?php if (isset($_GET['dsort']) && $_GET['dsort'] == "l-updated") {
                                                         echo "selected";
                                                     } ?>>Last-Updated</option>
-                        <!-- SELECT * FROM categories ORDER BY title DESC; -->
-                        <!-- SELECT * FROM categories ORDER BY title ASC; -->
+
                     </select>
                     <input type="submit" value="Submit">
                 </form>
