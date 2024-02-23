@@ -534,6 +534,35 @@ table .status-inactive {
 
 }
 
+/* Search */
+.search {
+    display: inline-block;
+    width: auto;
+}
 
+.search input[type="text"] {
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
 
-/* Image slider */
+.search input[type="submit"] {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.search input[type="submit"]:disabled {
+    background-color: #ccc;
+    /* Grey background color when disabled */
+    cursor: not-allowed;
+    /* Change cursor to not-allowed when disabled */
+}
