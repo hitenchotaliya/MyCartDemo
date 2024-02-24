@@ -124,12 +124,14 @@
             <div class="col-md-7">
                 <form action="categories.php" method="GET">
                     <div class="input-group search">
-                        <input type="text" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
-                                                                                                echo $svalue;
-                                                                                            } ?>">
+                        <input type="text" id="liveSearch" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
+                                                                                                                echo $svalue;
+                                                                                                            } ?>">
+
                         <span>
                             <input type="submit" value="Search" />
                         </span>
+                        <div id="searchResults"></div>
 
                     </div>
                 </form>

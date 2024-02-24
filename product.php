@@ -139,13 +139,13 @@ function ShowProduct($result)
         <div class="col-md-7 search">
             <form action="product.php" method="GET">
                 <div class="input-group">
-                    <input type="text" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
-                                                                                            echo $svalue;
-                                                                                        } ?>">
+                    <input type="text" id="liveSearch" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
+                                                                                                            echo $svalue;
+                                                                                                        } ?>">
                     <span class="input-group-btn">
                         <input type="submit" value="Search" class="btn btn-primary" />
                     </span>
-
+                    <div id="searchResults"></div>
                 </div>
             </form>
             <div class="error-message" style="color: red;"></div>

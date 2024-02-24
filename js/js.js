@@ -1,30 +1,3 @@
-// function status_confirm(tableName) {
-//     // Collect all the selected checkboxes
-//     var selectedIds = [];
-//     $('.checkbox:checked').each(function () {
-//         selectedIds.push($(this).val());
-//     });
-
-//     // Check if any checkboxes are selected
-//     if (selectedIds.length > 0) {
-//         // Append the selected IDs and table name to the form data
-//         $('form[name="bulk_edit_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-//         $('form[name="bulk_edit_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
-
-//         // Ask for confirmation
-//         var result = confirm("Are you sure to change status of selected items?");
-//         if (result) {
-//             return true; // Proceed with the action
-//         } else {
-//             return false; // Cancel the action
-//         }
-//     } else {
-//         // No checkboxes selected, show an alert
-//         alert('Select at least 1 record to change status.');
-//         return false; // Cancel the action
-//     }
-// }
-
 function status_confirm(tableName) {
     // Collect all the selected checkboxes
     var selectedIds = [];
@@ -87,33 +60,6 @@ function status_confirm(tableName) {
         swal("Error!", "Select at least 1 record to delete.", "error");
     }
 }
-
-// function delete_confirm(tableName) {
-//     // Collect all the selected checkboxes
-//     var selectedIds = [];
-//     $('.checkbox:checked').each(function () {
-//         selectedIds.push($(this).val());
-//     });
-
-//     if (selectedIds.length > 0) {
-//         // Append the selected IDs and table name to the form data
-//         $('form[name="bulk_action_form"]').append('<input type="hidden" name="checked_id" value="' + selectedIds.join(',') + '">');
-//         $('form[name="bulk_action_form"]').append('<input type="hidden" name="table_name" value="' + tableName + '">');
-
-//         // Ask for confirmation
-//         var result = confirm("Are you sure you want to delete the selected item(s)?");
-//         if (result) {
-//             return true; // Proceed with the action
-//         } else {
-//             return false; // Cancel the action
-//         }
-//     } else {
-//         alert('Select at least 1 record to delete.');
-//         return false;
-//     }
-// }
-
-
 
 function delete_confirm(tableName) {
     // Collect all the selected checkboxes
@@ -222,7 +168,7 @@ $(document).ready(function () {
                         var res = JSON.parse(response);
 
                         if (res.hasOwnProperty('success')) {
-                            $("#adminLogin").prepend("<div class='alert alert-success'>Logged in successfully</div>");
+                            $("#adminLogin").prepend("<div style='color:green' class='alert alert-success'>Logged in successfully</div>");
                             setTimeout(function () {
                                 window.location = URL + 'dashboard.php';
                             }, 1000);
@@ -278,34 +224,6 @@ $(document).ready(function () {
     });
 
 
-    //Single Delete Confirm
-    // $('.deleted_confirm').on('click', function (e) {
-    //     // Prevent the default form submission
-    //     e.preventDefault();
-
-    //     // Store the reference to the current form
-    //     var form = $(this).closest('form');
-
-    //     // Display SweetAlert confirmation dialog
-    //     swal({
-    //         title: "Are you sure?",
-    //         text: "Once deleted, you will not be able to recover this!",
-    //         icon: "warning",
-    //         buttons: true,
-    //         dangerMode: true,
-    //     }).then((willDelete) => {
-    //         // If the user confirms deletion, submit the form
-    //         if (willDelete) {
-    //             swal("Deleted Successfully!");
-    //             form.submit();
-
-    //         } else {
-    //             // Otherwise, do nothing
-    //             swal("Your record is safe!");
-    //         }
-    //     });
-    // });
-
 
     //Delete
     $(document).on("click", ".deleted_confirm", function () {
@@ -360,7 +278,7 @@ $(document).ready(function () {
     });
 
 
-
+    //Status Change
     $(document).on("change", ".active_confirm", function () {
         var id = $(this).siblings('input[name="id"]').val(); // Get the ID value
         var checked = $(this).is(':checked'); // Check if the checkbox is checked or not
@@ -424,7 +342,8 @@ $(document).ready(function () {
             }
         });
     });
-    // Form submission validation
+
+    // Product Form submission validation
     $('.productForm').submit(function (event) {
         console.log("Form submitted");
         var selectedCategory = $('#categoryID').val();
@@ -491,6 +410,7 @@ $(document).ready(function () {
         }
     });
 
+    //Validation
     $('#productFormInsert input, #productFormInsert select').on('input change', function () {
         var fieldName = $(this).attr('name');
         var fieldValue = $(this).val().trim();
@@ -531,7 +451,7 @@ $(document).ready(function () {
         $('button[type="submit"]').prop('disabled', hasError).css('background-color', hasError ? 'grey' : '');
     });
 
-
+    //Category insert form validation
     $('input[name="categoryname"]').on('input', function () {
         // Get the category name from the input field
         var categoryName = $(this).val().trim().toLowerCase();
@@ -567,6 +487,8 @@ $(document).ready(function () {
         $('button[type="submit"]').css('background-color', hasError ? 'grey' : '');
 
     });
+
+    //Submitting category
     $('#categoryForm').on('submit', function (e) {
         var selectedSubcategory = $("#parentCategoryID").val();
         if (selectedSubcategory === '') {
@@ -597,8 +519,51 @@ $(document).ready(function () {
         }
     });
 
-    //Image Slider
+    //Live Search
 
+    $("#liveSearch").on("keyup", function () {
+        var search_term = $(this).val();
+        var source = ''; // Initialize source variable
+
+        // Determine the source based on the current page
+        if (window.location.pathname.includes("product.php")) {
+            source = 'products';
+        } else if (window.location.pathname.includes("categories.php")) {
+            source = 'categories';
+        }
+        //console.log(source);
+
+        // Check if search term is not empty
+        if (search_term.trim() !== '') {
+            $.ajax({
+                url: "./php-files/liveSearch.php",
+                type: "POST",
+                data: { search: search_term, source: source },
+                dataType: "json", // Expect JSON response
+                success: function (response) {
+                    // Clear previous search results
+                    $('#searchResults').empty();
+                    if (response && response.length > 0) { // Check if there are matching results
+                        $.each(response, function (index, result) {
+                            $('#searchResults').append('<div class="search-result">' + result.title + '</div>');
+                        });
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", error); // Handle AJAX error
+                }
+            });
+        } else {
+            // Clear search results if search term is empty
+            $('#searchResults').empty();
+        }
+    });
+
+    // Handle click on search result item to fill search box
+    $(document).on('click', '.search-result', function () {
+        var resultText = $(this).text();
+        $('#liveSearch').val(resultText);
+    });
 
 
     console.log("Document ready, delete confirmation script running...");
