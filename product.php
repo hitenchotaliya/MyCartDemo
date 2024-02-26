@@ -145,6 +145,8 @@ function ShowProduct($result)
                     <span class="input-group-btn">
                         <input type="submit" value="Search" class="btn btn-primary" />
                     </span>
+                    <button type="button" onclick="window.location.href='<?php echo $product;  ?>'">Clear</button>
+
                     <div id="searchResults"></div>
                 </div>
             </form>
@@ -221,7 +223,6 @@ function ShowProduct($result)
                 </select>
                 <input type="submit" value="Submit">
             </form>
-            <button onclick="window.location.href='<?php echo $product; ?>'"><i class="fa-solid fa-broom"></i></button>
         </div>
 
         <div class="pagination">

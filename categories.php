@@ -121,7 +121,7 @@
         <div class="main">
             <h1>Categories</h1>
 
-            <div class="col-md-7">
+            <div class="col-md-7" id="formDiv">
                 <form action="categories.php" method="GET">
                     <div class="input-group search">
                         <input type="text" id="liveSearch" name="search" placeholder="Search for..." value="<?php if (isset($svalue)) {
@@ -131,10 +131,13 @@
                         <span>
                             <input type="submit" value="Search" />
                         </span>
+                        <button type="button" onclick="window.location.href='<?php echo $cat ?>'">Clear</button>
+
                         <div id="searchResults"></div>
 
                     </div>
                 </form>
+
                 <div class="error-message" style="color: red;"></div>
             </div>
             <div id="table-data" class="table-sortable">
@@ -242,7 +245,6 @@
                     </select>
                     <input type="submit" value="Submit">
                 </form>
-                <button onclick="window.location.href='<?php echo $cat ?>'">Clear</button>
 
             </div>
             <div class="pagination">

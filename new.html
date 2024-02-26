@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Shopping</title>
+    <style>
+        /* Resetting some default styles */
+        body,
+        h1,
+        h2,
+        h3,
+        p,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #DBE2EF;
+        }
+
+        /* Header Styles */
+        .header {
+            background: #112D4E;
+            color: #fff;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Horizontal Menu Styles */
+        .horizontal-menu {
+            background: #3F72AF;
+            padding: 10px 0;
+            text-align: center;
+            /* Centering the menu items */
+        }
+
+        .horizontal-menu ul {
+            display: inline-block;
+            position: relative;
+        }
+
+        .horizontal-menu ul li {
+            display: inline-block;
+            margin-right: 20px;
+            position: relative;
+        }
+
+        .horizontal-menu ul li a {
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 15px;
+            display: block;
+        }
+
+        /* Dropdown Submenu Styles */
+        .horizontal-menu ul ul {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #3F72AF;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.5s;
+            z-index: 1;
+        }
+
+        .horizontal-menu ul li:hover ul {
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.5s;
+        }
+
+        .horizontal-menu ul ul li {
+            display: block;
+            min-width: 150px;
+            margin-right: 0;
+        }
+
+        .horizontal-menu ul ul li a {
+            padding: 10px 20px;
+            display: block;
+        }
+
+
+        /* Transparent Background on Hover */
+        .horizontal-menu ul li:hover>a {
+            background-color: transparent;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            background: #DBE2EF;
+            width: 250px;
+            height: calc(100vh - 70px);
+            float: left;
+            padding: 20px;
+        }
+
+        .filter-options {
+            background: #fff;
+            padding: 10px;
+            margin-bottom: 20px;
+        }
+
+        .filter-options h3 {
+            font-size: 18px;
+            color: #333;
+            margin-top: 0;
+        }
+
+        .filter-options-content {
+            margin-top: 10px;
+        }
+
+        .filter-options-content label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .filter-options-content select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .filter-options-content input[type="submit"] {
+            padding: 8px 20px;
+            background-color: #3F72AF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            background: #fff;
+            padding: 20px;
+            margin-left: 250px;
+            /* width of the sidebar */
+            height: calc(100vh - 70px);
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <div class="header-left">ONLINE SHOPPING</div>
+        <div class="header-right">HI ADMIN</div>
+        <div class="logout"><a href="./php-files/logout.php"><i class="fa-solid fa-arrow-right-from-bracket"><span
+                        class="tooltiptext">Logout</span></i></a></div>
+    </div>
+
+    <!-- Horizontal Navigation Menus -->
+    <nav class="horizontal-menu">
+        <ul>
+            <li>
+                <a href="dashboard.php">Home</a>
+            </li>
+            <li>
+                <a href="#">Category</a>
+                <ul>
+                    <li><a href="addcategory.php">Add Category</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Product</a>
+                <ul>
+                    <li><a href="addproduct.php">Add Product</a></li>
+                </ul>
+            </li>
+            <li><a href="about.php">About Us</a></li>
+        </ul>
+    </nav>
+
+    <div class="sidebar">
+        <!-- Filtering Options -->
+        <div class="filter-options">
+            <h3>Filter</h3>
+            <div class="filter-options-content">
+                <label for="category">Category:</label>
+                <select id="category" name="category">
+                    <option value="">Select Category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="clothing">Clothing</option>
+                    <option value="furniture">Furniture</option>
+                </select>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="">Select Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+
+                <input type="submit" value="Apply">
+            </div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Main content area -->
+    </div>
+
+    <script src="./js/js.js"></script>
+    <script src="./js/table-sort.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+</body>
+
+</html>
