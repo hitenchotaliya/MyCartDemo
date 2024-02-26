@@ -563,6 +563,8 @@ $(document).ready(function () {
     $(document).on('click', '.search-result', function () {
         var resultText = $(this).text();
         $('#liveSearch').val(resultText);
+        // Clear search results
+        $('#searchResults').empty();
     });
 
 
