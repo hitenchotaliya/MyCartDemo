@@ -40,6 +40,8 @@
     if (isset($_GET['search'])) {
         $svalue = $_GET['search'];
     }
+    $page = isset($_GET['page']) ? $_GET['page'] : 1;
+
     // Check if a search query is present
     if (isset($_GET['search']) && $_GET['search'] !== '') {
         $categories = $categoriesClass->searchCategories($_GET['search']);
