@@ -14,7 +14,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #DBE2EF;
+    background-color: #fff;
 
 }
 
@@ -40,7 +40,6 @@ body {
     color: #DBE2EF;
     margin-right: 100px;
 }
-
 
 .logout .tooltiptext {
     text-size-adjust: 5px;
